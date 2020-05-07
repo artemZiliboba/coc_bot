@@ -46,12 +46,8 @@ public class CocService extends BaseService implements ICocService {
     @Override
     public MyIp getMyIp(Token token) {
         log.info("Get my ip address");
-        String url = prepareUrl("https://api.ipify.org", "?format=json", "");
-        String url2 = prepareUrl("https://api.telegram.org", "/bot815044037:AAEpHnZwAzWSfl8hJ2aUybaPmr6aCLe87FQ/getMe", "");
-        String url3 = prepareUrl("https://postman-echo.com", "/ip", "");
-
-
-        return request(url3, HttpMethod.GET, prepareRequestHeaders(token), MyIp.class);
+        String url = prepareUrl("https://postman-echo.com", "/ip", "");
+        return request(url, HttpMethod.GET, prepareRequestHeaders(token), MyIp.class);
     }
 
     private String prepareUrl(String host, String url, String id) {

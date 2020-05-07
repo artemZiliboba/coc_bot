@@ -1,6 +1,7 @@
 package com.kaptyuk.artem.base.bot;
 
 import com.kaptyuk.artem.base.db.SqliteManager;
+import com.kaptyuk.artem.base.model.MyIp;
 import com.kaptyuk.artem.base.model.Token;
 import com.kaptyuk.artem.base.model.players.Players;
 import com.kaptyuk.artem.base.service.CocService;
@@ -115,6 +116,9 @@ public class Bot extends TelegramLongPollingBot {
                     sendMsg(message, "It's a setting message");
                     sendMsgToMyChanel();
                     break;
+                case "/ip":
+                    MyIp myIp = cocService.getMyIp(new Token());
+                    sendMsg(message, "BOT IP : " + myIp.getIp());
                 default:
             }
         }
