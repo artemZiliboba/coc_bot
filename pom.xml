@@ -125,7 +125,7 @@
                     <assembleDirectory>target</assembleDirectory>
                     <programs>
                         <program>
-                            <mainClass>com.home.server.TelegramBot</mainClass>
+                            <mainClass>com.kaptyuk.artem.base.bot.Bot</mainClass>
                             <name>worker</name>
                         </program>
                     </programs>
