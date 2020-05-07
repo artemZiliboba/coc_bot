@@ -126,7 +126,7 @@
                     <programs>
                         <program>
                             <mainClass>com.home.server.TelegramBot</mainClass>
-                            <name>workerBot</name>
+                            <name>worker</name>
                         </program>
                     </programs>
                 </configuration>
