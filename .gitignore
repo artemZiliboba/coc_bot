@@ -1,0 +1,19 @@
+# IDE specific  #
+###############################
+.project
+.pydevproject
+/.git
+/.settings
+.idea/*
+*/.idea/*
+!/.idea/inspectionProfiles/
+.idea/inspectionProfiles/profiles_settings.xml
+.idea/inspectionProfiles/Project_Default.xml
+libspecs/
+red.xml
+log.html
+output.xml
+report.html
+*/coverage_html_report/*
+coverage_html_report/*
+.coverage
