@@ -1,6 +1,6 @@
 package com.home.server.bot;
 
-//import com.home.server.db.HerokuPostgresql;
+import com.home.server.db.HerokuPostgresql;
 import com.home.server.model.MyIp;
 import com.home.server.model.Token;
 import com.home.server.service.CocService;
@@ -27,11 +27,10 @@ public class Bot extends TelegramLongPollingBot {
 
     private RestOperations restTemplate = new RestTemplate();
     private SqliteManager sqliteManager = new SqliteManager();
-//    private HerokuPostgresql herokuSql = new HerokuPostgresql();
+    private HerokuPostgresql herokuSql = new HerokuPostgresql();
     private static final String host = "https://api.clashofclans.com";
     private CocService cocService = new CocService(restTemplate, host);
-    private static final String TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjFhMDcwMzU4LTMzOGMtNGJhYS1hZjMwLWMyYjAzNGQyZWY4OSIsImlhdCI6MTU4ODYxOTcwOSwic3ViIjoiZGV2ZWxvcGVyL2M4NTEzYmQyLTdiMGMtMjY4ZC01NTJjLWI0MjZjZTc2NjJhZSIsInNjb3BlcyI6WyJjbGFzaCJdLCJsaW1pdHMiOlt7InRpZXIiOiJkZXZlbG9wZXIvc2lsdmVyIiwidHlwZSI6InRocm90dGxpbmcifSx7ImNpZHJzIjpbIjkxLjI0MC4xMjQuMTMwIl0sInR5cGUiOiJjbGllbnQifV19.Xi-5N_6tvcQyjkXFCKdNJYEC70DYUMKBeCYDAWGR2mDXRQ5E5w34I46ItHRf1RBjeAxV6Rln3i7mJSxlPRH6EQ";
-//    private static final String TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6IjRlYjE1N2NlLTNhNjAtNGJiMC05M2Q4LWUyMjUwODVkMTc0MCIsImlhdCI6MTU4ODk0MTIwMCwic3ViIjoiZGV2ZWxvcGVyL2M4NTEzYmQyLTdiMGMtMjY4ZC01NTJjLWI0MjZjZTc2NjJhZSIsInNjb3BlcyI6WyJjbGFzaCJdLCJsaW1pdHMiOlt7InRpZXIiOiJkZXZlbG9wZXIvc2lsdmVyIiwidHlwZSI6InRocm90dGxpbmcifSx7ImNpZHJzIjpbIjU0LjIyOS4xNDMuMjM3Il0sInR5cGUiOiJjbGllbnQifV19.alLeUpM3OE9e20hDaTom8v3iCfPsWKfkfxC0B1awINNG7-2wt_8P9aApKKIEGcdAl4ru-fGT7SI8dRjfMlMgAw";
+    private static final String TOKEN = System.getenv("COC_TOKEN");
 
     public static void main(String[] args) {
 
@@ -120,10 +119,10 @@ public class Bot extends TelegramLongPollingBot {
                     sendMsg(message, "Test variables " + test);
                     sendMsgToMyChanel();
                     break;
-//                case "/init":
-//                    herokuSql.iniPostgreDb();
-//                    sendMsg(message, "The database has been initialized.");
-//                    break;
+                case "/init":
+                    herokuSql.initPostgreDb();
+                    sendMsg(message, "The database has been initialized.");
+                    break;
                 case "/ip":
                     MyIp myIp = cocService.getMyIp(new Token());
                     sendMsg(message, "BOT IP : " + myIp.getIp());
