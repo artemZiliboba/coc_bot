@@ -1,6 +1,6 @@
 package com.home.server.bot;
 
-import com.home.server.db.HerokuPostgresql;
+//import com.home.server.db.HerokuPostgresql;
 import com.home.server.model.MyIp;
 import com.home.server.model.Token;
 import com.home.server.service.CocService;
