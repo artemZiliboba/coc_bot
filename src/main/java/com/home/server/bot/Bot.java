@@ -31,6 +31,7 @@ public class Bot extends TelegramLongPollingBot {
     private static final String host = "https://api.clashofclans.com";
     private CocService cocService = new CocService(restTemplate, host);
     private static final String TOKEN = System.getenv("COC_TOKEN");
+    private static final String BOT_TOKEN = System.getenv("BOT_TOKEN");
 
     public static void main(String[] args) {
 
@@ -139,6 +140,6 @@ public class Bot extends TelegramLongPollingBot {
 
     @Override
     public String getBotToken() {
-        return "815044037:AAEpHnZwAzWSfl8hJ2aUybaPmr6aCLe87FQ";
+        return BOT_TOKEN;
     }
 }
