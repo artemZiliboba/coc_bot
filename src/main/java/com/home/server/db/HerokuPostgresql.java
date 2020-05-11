@@ -13,8 +13,6 @@ public class HerokuPostgresql {
     private static final String PASS = System.getenv("DB_PASS");
     private static final Integer QUERY_TIMEOUT = 30; // seconds
 
-
-    //    public static void main(String[] argv) {
     public void initPostgreDb() {
 
         log.debug("Testing connection to PostgreSQL JDBC");
@@ -80,5 +78,52 @@ public class HerokuPostgresql {
                 log.error(e.getMessage());
             }
         }
+    }
+
+    public String getToken() {
+        String coc_token = null;
+        Connection connection = null;
+
+        try {
+            log.debug("Check PostgreSQL driver...");
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            log.debug("PostgreSQL JDBC Driver is not found. Include it in your library path ");
+            e.printStackTrace();
+        }
+
+        try {
+            connection = DriverManager
+                    .getConnection(DB_URL, USER, PASS);
+
+            Statement statement = connection.createStatement();
+
+            ResultSet rs = statement.executeQuery("select * from COC.CONFIG where conf_id = 1");
+            while (rs.next()) {
+                log.debug("Read data from query...");
+                coc_token = rs.getString("conf_value");
+                log.debug(
+                        "\n\tCONF_ID = " + rs.getInt("conf_id") +
+                                "\n\tCONF_NAME = " + rs.getString("conf_name") +
+                                "\n\tCONF_VALUE = " + rs.getString("conf_value")
+                );
+            }
+        } catch (SQLException e) {
+            log.debug("Connection Failed");
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                    log.debug("connection closed ...");
+                }
+
+            } catch (SQLException e) {
+                // connection close failed.
+                log.error(e.getMessage());
+            }
+        }
+        log.debug("COC token is : " + coc_token);
+        return coc_token;
     }
 }

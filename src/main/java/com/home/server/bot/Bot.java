@@ -100,7 +100,7 @@ public class Bot extends TelegramLongPollingBot {
             switch (message.getText()) {
                 case "/help":
                     Token token = new Token();
-                    token.setAccess_token(TOKEN);
+                    token.setAccess_token(herokuSql.getToken());
                     Players players = cocService.getPlayers(token, "\u2116PGU8YVRVV");
 
                     // sqliteManager.runQuery(players.getName(), players.getTag(), players.getTownHallLevel(), players.getVersusTrophies(), players.getTrophies());
