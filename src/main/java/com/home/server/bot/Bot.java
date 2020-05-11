@@ -51,10 +51,10 @@ public class Bot extends TelegramLongPollingBot {
             DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
 
             // Устанавливаем настройки прокси
-            botOptions.setProxyHost("95.217.23.149");
-            botOptions.setProxyPort(40116);
-            // Выбираем тип прокси: [HTTP|SOCKS4|SOCKS5] (по умолчанию: NO_PROXY)
-            botOptions.setProxyType(DefaultBotOptions.ProxyType.SOCKS5);
+//            botOptions.setProxyHost("95.216.33.245");
+//            botOptions.setProxyPort(10250);
+//            // Выбираем тип прокси: [HTTP|SOCKS4|SOCKS5] (по умолчанию: NO_PROXY)
+//            botOptions.setProxyType(DefaultBotOptions.ProxyType.SOCKS5);
 
             telegramBotsApi.registerBot(new Bot(botOptions));
         } catch (TelegramApiException e) {

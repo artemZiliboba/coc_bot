@@ -10,7 +10,7 @@ import org.springframework.web.client.RestOperations;
 public class TelegramApi extends BaseService implements ITelegramApi {
 
     private static final String HOST = "https://api.telegram.org/bot%s";
-    private static final String BOT_TOKEN = "815044037:AAEpHnZwAzWSfl8hJ2aUybaPmr6aCLe87FQ";
+    private static final String BOT_TOKEN = System.getenv("BOT_TOKEN");
     private static final String URL_ME = "/getMe";
 
     public TelegramApi(RestOperations restTemplate, String host) {

@@ -53,8 +53,6 @@ public abstract class BaseService {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
-        //requestHeaders.put(AUTHTOKEN, Collections.singletonList(token.getAccess_token()));
-        //requestHeaders.put(X_PS_TOKEN, Collections.singletonList(token.getAccess_token()));
 
         return requestHeaders;
     }

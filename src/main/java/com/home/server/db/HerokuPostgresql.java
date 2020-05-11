@@ -13,7 +13,8 @@ public class HerokuPostgresql {
     private static final String PASS = System.getenv("DB_PASS");
     private static final Integer QUERY_TIMEOUT = 30; // seconds
 
-//    public static void main(String[] argv) {
+
+    //    public static void main(String[] argv) {
     public void initPostgreDb() {
 
         log.debug("Testing connection to PostgreSQL JDBC");
@@ -48,7 +49,17 @@ public class HerokuPostgresql {
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS COC.PLR" +
                     "(plr_id serial PRIMARY KEY," +
                     "username VARCHAR (50) NOT NULL," +
-                    "tag VARCHAR (50) UNIQUE NOT NULL)");
+                    "tag VARCHAR (50) UNIQUE NOT NULL)"
+            );
+
+            log.debug("Create table CONFIG...");
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS COC.CONFIG" +
+                    "(conf_id serial PRIMARY KEY," +
+                    "conf_name VARCHAR (50) NOT NULL," +
+                    "description VARCHAR (50))" +
+                    "value_string VARCHAR (50))" +
+                    "value_int INTEGER"
+            );
 
             // https://www.postgresqltutorial.com/postgresql-insert/
             log.debug("Insert demo player...");
