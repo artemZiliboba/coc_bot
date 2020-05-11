@@ -58,7 +58,7 @@ public class HerokuPostgresql {
                     "conf_name VARCHAR (50) NOT NULL," +
                     "description VARCHAR (50))," +
                     "value_string VARCHAR (50))," +
-                    "value_int INTEGER"
+                    "value_int INTEGER)"
             );
 
             // https://www.postgresqltutorial.com/postgresql-insert/
