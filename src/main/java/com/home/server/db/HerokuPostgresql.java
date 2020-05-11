@@ -56,8 +56,8 @@ public class HerokuPostgresql {
             statement.executeUpdate("CREATE TABLE IF NOT EXISTS COC.CONFIG" +
                     "(conf_id serial PRIMARY KEY," +
                     "conf_name VARCHAR (50) NOT NULL," +
-                    "description VARCHAR (50))" +
-                    "value_string VARCHAR (50))" +
+                    "description VARCHAR (50))," +
+                    "value_string VARCHAR (50))," +
                     "value_int INTEGER"
             );
 
