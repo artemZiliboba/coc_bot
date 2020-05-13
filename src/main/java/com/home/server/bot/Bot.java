@@ -3,9 +3,8 @@ package com.home.server.bot;
 import com.home.server.db.HerokuPostgresql;
 import com.home.server.model.MyIp;
 import com.home.server.model.Token;
-import com.home.server.service.CocService;
-import com.home.server.db.SqliteManager;
 import com.home.server.model.players.Players;
+import com.home.server.service.CocService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
@@ -17,21 +16,28 @@ import org.telegram.telegrambots.meta.TelegramBotsApi;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+import org.telegram.telegrambots.meta.logging.BotLogger;
 
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 public class Bot extends TelegramLongPollingBot {
 
-    private RestOperations restTemplate = new RestTemplate();
-    private SqliteManager sqliteManager = new SqliteManager();
-    private HerokuPostgresql herokuSql = new HerokuPostgresql();
     private static final String host = "https://api.clashofclans.com";
-    private CocService cocService = new CocService(restTemplate, host);
-    private static final String TOKEN = System.getenv("COC_TOKEN");
     private static final String BOT_TOKEN = System.getenv("BOT_TOKEN");
+    private static final String LOGTAG = "COMMANDSHANDLER";
+    private static final String PROXY_IP = "49.12.4.194";
+    private static final Integer PROXY_PORT = 13699;
+
+    private HerokuPostgresql herokuSql = new HerokuPostgresql();
+    private RestOperations restTemplate = new RestTemplate();
+    private CocService cocService = new CocService(restTemplate, host);
 
     public static void main(String[] args) {
 
@@ -51,10 +57,10 @@ public class Bot extends TelegramLongPollingBot {
             DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
 
             // Устанавливаем настройки прокси
-//            botOptions.setProxyHost("95.216.33.245");
-//            botOptions.setProxyPort(10250);
-//            // Выбираем тип прокси: [HTTP|SOCKS4|SOCKS5] (по умолчанию: NO_PROXY)
-//            botOptions.setProxyType(DefaultBotOptions.ProxyType.SOCKS5);
+            botOptions.setProxyHost(PROXY_IP);
+            botOptions.setProxyPort(PROXY_PORT);
+            // Выбираем тип прокси: [HTTP|SOCKS4|SOCKS5] (по умолчанию: NO_PROXY)
+            botOptions.setProxyType(DefaultBotOptions.ProxyType.SOCKS4);
 
             telegramBotsApi.registerBot(new Bot(botOptions));
         } catch (TelegramApiException e) {
@@ -80,11 +86,12 @@ public class Bot extends TelegramLongPollingBot {
         }
     }
 
-    private void sendMsgToMyChanel() {
+    private void sendMsgToMyChanel(String text) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(true);
         sendMessage.setChatId("-1001241034570");
-        sendMessage.setText("From bot");
+
+        sendMessage.setText(text);
 
         try {
             execute(sendMessage);
@@ -99,6 +106,7 @@ public class Bot extends TelegramLongPollingBot {
         if (message != null && message.hasText()) {
             switch (message.getText()) {
                 case "/help":
+                    BotLogger.info(LOGTAG, "Hello my friend");
                     Token token = new Token();
                     token.setAccess_token(herokuSql.getToken());
                     Players players = cocService.getPlayers(token, "\u2116PGU8YVRVV");
@@ -118,19 +126,66 @@ public class Bot extends TelegramLongPollingBot {
                 case "/settings":
                     String test = System.getenv("DATABASE_URL");
                     sendMsg(message, "Test variables " + test);
-                    sendMsgToMyChanel();
+                    sendMsgToMyChanel("From bot, via method");
                     break;
                 case "/init":
-                    herokuSql.initPostgreDb();
+                    herokuSql.initPostgresDb();
                     sendMsg(message, "The database has been initialized.");
                     break;
                 case "/ip":
                     MyIp myIp = cocService.getMyIp(new Token());
                     sendMsg(message, "BOT IP : " + myIp.getIp());
+                    break;
+                case "/start":
+                    sendMsg(message, "Hello my lord!");
+                    break;
+                case "/Ruslan":
+                    String playerTag = "PGU8YVRVV";
+                    checkPlayer(playerTag);
+                    break;
+                case "Hello":
+                    try {
+                        execute(sendInlineKeyBoardMessage(update.getMessage().getChatId()));
+                    } catch (TelegramApiException e) {
+                        e.printStackTrace();
+                    }
+                    break;
                 default:
             }
         }
+    }
 
+    // Inline buttons example
+    private static SendMessage sendInlineKeyBoardMessage(long chatId) {
+        InlineKeyboardMarkup inlineKeyboardMarkup = new InlineKeyboardMarkup();
+        InlineKeyboardButton inlineKeyboardButton1 = new InlineKeyboardButton();
+        InlineKeyboardButton inlineKeyboardButton2 = new InlineKeyboardButton();
+        inlineKeyboardButton1.setText("Тык");
+        inlineKeyboardButton1.setCallbackData("Button \"Тык\" has been pressed");
+        inlineKeyboardButton2.setText("Тык2");
+        inlineKeyboardButton2.setCallbackData("Button \"Тык2\" has been pressed");
+        List<InlineKeyboardButton> keyboardButtonsRow1 = new ArrayList<>();
+        List<InlineKeyboardButton> keyboardButtonsRow2 = new ArrayList<>();
+
+        keyboardButtonsRow1.add(inlineKeyboardButton1);
+        keyboardButtonsRow1.add(new InlineKeyboardButton().setText("Fi4a").setCallbackData("CallFi4a"));
+
+        keyboardButtonsRow2.add(inlineKeyboardButton2);
+        List<List<InlineKeyboardButton>> rowList = new ArrayList<>();
+        rowList.add(keyboardButtonsRow1);
+        rowList.add(keyboardButtonsRow2);
+        inlineKeyboardMarkup.setKeyboard(rowList);
+        return new SendMessage().setChatId(chatId).setText("Пример").setReplyMarkup(inlineKeyboardMarkup);
+    }
+
+    private void checkPlayer(String playerTag) {
+        Token token = new Token();
+        token.setAccess_token(herokuSql.getToken());
+        Players players = cocService.getPlayers(token, "\u2116" + playerTag);
+
+        log.info("\n\tName\t: " + players.getName()
+                + "\n\tTag\t\t: " + players.getTag()
+                + "\n\tTown Hall Level \t: " + players.getTownHallLevel());
     }
 
     @Override

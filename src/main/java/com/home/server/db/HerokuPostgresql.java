@@ -1,6 +1,7 @@
 package com.home.server.db;
 
 import lombok.extern.slf4j.Slf4j;
+import org.telegram.telegrambots.meta.logging.BotLogger;
 
 import java.sql.*;
 
@@ -13,7 +14,9 @@ public class HerokuPostgresql {
     private static final String PASS = System.getenv("DB_PASS");
     private static final Integer QUERY_TIMEOUT = 30; // seconds
 
-    public void initPostgreDb() {
+    private static final String LOGTAG = "CONNECTIONDB";
+
+    public void initPostgresDb() {
 
         log.debug("Testing connection to PostgreSQL JDBC");
         log.debug(DB_URL);
@@ -21,9 +24,9 @@ public class HerokuPostgresql {
         try {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
-            log.debug("PostgreSQL JDBC Driver is not found. Include it in your library path ");
+            BotLogger.error(LOGTAG, "PostgreSQL JDBC Driver is not found. Include it in your library path ");
+            //log.debug("PostgreSQL JDBC Driver is not found. Include it in your library path ");
             e.printStackTrace();
-            return;
         }
 
         log.debug("PostgreSQL JDBC Driver successfully connected");
@@ -44,10 +47,12 @@ public class HerokuPostgresql {
 
             // https://www.postgresqltutorial.com/postgresql-create-table/
             log.debug("Create table PLR...");
-            statement.executeUpdate("CREATE TABLE IF NOT EXISTS COC.PLR" +
-                    "(plr_id serial PRIMARY KEY," +
-                    "username VARCHAR (50) NOT NULL," +
-                    "tag VARCHAR (50) UNIQUE NOT NULL)"
+            statement.executeUpdate("create table if not exists COC.PLR(plr_id serial primary key, " +
+                    "username varchar (50) not null, " +
+                    "tag varchar (50) unique not null, " +
+                    "trophies integer, " +
+                    "vs_trophies integer, " +
+                    "th integer)"
             );
 
             log.debug("Create table CONFIG...");
@@ -61,10 +66,13 @@ public class HerokuPostgresql {
 
             // https://www.postgresqltutorial.com/postgresql-insert/
             log.debug("Insert demo player...");
-            statement.executeUpdate("INSERT INTO COC.PLR VALUES(1, 'DEMO_NAME', 'DEMO_TAG')");
+            statement.executeUpdate("insert into COC.PLR" +
+                    "(username, tag, trophies, vs_trophies, th) " +
+                    "values('DEMO_NAME', 'DEMO_TAG', 2643, 4283, 13)");
 
         } catch (SQLException e) {
             log.debug("Connection Failed");
+            BotLogger.error(LOGTAG, "PostgreSQL JDBC Driver is not found. Include it in your library path ");
             e.printStackTrace();
         } finally {
             try {
@@ -85,14 +93,6 @@ public class HerokuPostgresql {
         Connection connection = null;
 
         try {
-            log.debug("Check PostgreSQL driver...");
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            log.debug("PostgreSQL JDBC Driver is not found. Include it in your library path ");
-            e.printStackTrace();
-        }
-
-        try {
             connection = DriverManager
                     .getConnection(DB_URL, USER, PASS);
 
@@ -108,9 +108,9 @@ public class HerokuPostgresql {
                                 "\n\tCONF_VALUE = " + rs.getString("conf_value")
                 );
             }
+
         } catch (SQLException e) {
-            log.debug("Connection Failed");
-            e.printStackTrace();
+            BotLogger.error(LOGTAG, e.getMessage());
         } finally {
             try {
                 if (connection != null) {
@@ -123,7 +123,7 @@ public class HerokuPostgresql {
                 log.error(e.getMessage());
             }
         }
-        log.debug("COC token is : " + coc_token);
         return coc_token;
+        //log.debug("COC token is : " + coc_token);
     }
 }

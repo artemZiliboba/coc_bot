@@ -21,7 +21,7 @@ public class CocService extends BaseService implements ICocService {
 
     @Override
     public Players getPlayers(Token token, String playerId) {
-        log.info("Loaded info about player tag : " + playerId);
+        log.info("Loaded info about player tag : " + playerId.substring(1));
 
         String url = prepareUrl(HOST, URL_PLAYERS, playerId);
         HttpHeaders httpHeaders = prepareRequestHeaders(token);
