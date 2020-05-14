@@ -14,15 +14,15 @@ import java.util.List;
 public class Players {
     private String tag;
     private String name;
-    private Long townHallLevel;
+    private Integer townHallLevel;
     private Long expLevel;
-    private Long trophies;
+    private Integer trophies;
     private Long bestTrophies;
     private Long warStars;
     private Long attackWins;
     private Long defenseWins;
     private Long builderHallLevel;
-    private Long versusTrophies;
+    private Integer versusTrophies;
     private Long bestVersusTrophies;
     private Long versusBattleWins;
     private String role;

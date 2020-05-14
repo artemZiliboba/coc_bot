@@ -29,15 +29,17 @@ import java.util.List;
 @Slf4j
 public class Bot extends TelegramLongPollingBot {
 
-    private static final String host = "https://api.clashofclans.com";
+    private static final String HOST = "https://api.clashofclans.com";
     private static final String BOT_TOKEN = System.getenv("BOT_TOKEN");
     private static final String LOGTAG = "COMMANDSHANDLER";
-    private static final String PROXY_IP = "49.12.4.194";
-    private static final Integer PROXY_PORT = 13699;
+
+    // proxy config
+    private static final String PROXY_IP = System.getenv("PROXY_IP");
+    private static final String PROXY_PORT = System.getenv("PROXY_PORT");
 
     private HerokuPostgresql herokuSql = new HerokuPostgresql();
     private RestOperations restTemplate = new RestTemplate();
-    private CocService cocService = new CocService(restTemplate, host);
+    private CocService cocService = new CocService(restTemplate, HOST);
 
     public static void main(String[] args) {
 
@@ -57,10 +59,12 @@ public class Bot extends TelegramLongPollingBot {
             DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
 
             // Устанавливаем настройки прокси
-            botOptions.setProxyHost(PROXY_IP);
-            botOptions.setProxyPort(PROXY_PORT);
+            if (PROXY_IP != null && PROXY_PORT != null) {
+                botOptions.setProxyHost(PROXY_IP);
+                botOptions.setProxyPort(Integer.parseInt(PROXY_PORT));
+            }
             // Выбираем тип прокси: [HTTP|SOCKS4|SOCKS5] (по умолчанию: NO_PROXY)
-            botOptions.setProxyType(DefaultBotOptions.ProxyType.SOCKS4);
+            botOptions.setProxyType(DefaultBotOptions.ProxyType.HTTP);
 
             telegramBotsApi.registerBot(new Bot(botOptions));
         } catch (TelegramApiException e) {
@@ -141,7 +145,13 @@ public class Bot extends TelegramLongPollingBot {
                     break;
                 case "/Ruslan":
                     String playerTag = "PGU8YVRVV";
-                    checkPlayer(playerTag);
+                    String result = checkPlayer(playerTag);
+                    sendMsg(message, result);
+                    break;
+                case "/Artem":
+                    String playerTagArt = "8VP9RGVVQ";
+                    String resultArt = checkPlayer(playerTagArt);
+                    sendMsg(message, resultArt);
                     break;
                 case "Hello":
                     try {
@@ -178,14 +188,14 @@ public class Bot extends TelegramLongPollingBot {
         return new SendMessage().setChatId(chatId).setText("Пример").setReplyMarkup(inlineKeyboardMarkup);
     }
 
-    private void checkPlayer(String playerTag) {
+    private String checkPlayer(String playerTag) {
         Token token = new Token();
         token.setAccess_token(herokuSql.getToken());
         Players players = cocService.getPlayers(token, "\u2116" + playerTag);
+        String result = herokuSql.checkPlayerInDb(players);
 
-        log.info("\n\tName\t: " + players.getName()
-                + "\n\tTag\t\t: " + players.getTag()
-                + "\n\tTown Hall Level \t: " + players.getTownHallLevel());
+        log.info(result);
+        return result;
     }
 
     @Override

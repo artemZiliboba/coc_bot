@@ -1,5 +1,7 @@
 package com.home.server.db;
 
+import com.home.server.dto.PlayerData;
+import com.home.server.model.players.Players;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.logging.BotLogger;
 
@@ -83,7 +85,7 @@ public class HerokuPostgresql {
 
             } catch (SQLException e) {
                 // connection close failed.
-                log.error(e.getMessage());
+                log.error("SQL exception : " + e.getMessage());
             }
         }
     }
@@ -125,5 +127,87 @@ public class HerokuPostgresql {
         }
         return coc_token;
         //log.debug("COC token is : " + coc_token);
+    }
+
+    public String checkPlayerInDb(Players players) {
+        String result = "";
+        boolean state = false;
+        Connection connection = null;
+
+        try {
+            connection = DriverManager
+                    .getConnection(DB_URL, USER, PASS);
+
+            Statement statement = connection.createStatement();
+            log.debug("Check player with tag : " + players.getTag());
+
+            PlayerData playerData = null;
+
+            // If player exists in DB
+            ResultSet rs = statement.executeQuery("select * from COC.PLR s WHERE s.tag = '" + players.getTag() + "';");
+            while (rs.next()) {
+                log.debug("select * from COC.PLR s WHERE s.tag = '" + players.getTag() + "'");
+                if (rs.getString("tag") != null) {
+                    state = true;
+                    playerData = new PlayerData(rs.getInt("plr_id"),
+                            rs.getString("username"),
+                            rs.getString("tag"),
+                            rs.getInt("trophies"),
+                            rs.getInt("vs_trophies"),
+                            rs.getInt("th"));
+                }
+            }
+
+            if (state) {
+                int trophiesDiff = players.getTrophies() - playerData.getTrophies();
+                int vsTrophiesDiff = players.getVersusTrophies() - playerData.getVs_trophies();
+                int thDiff = players.getTownHallLevel() - playerData.getTh();
+
+                // Кубки в родной деревне
+                if (trophiesDiff > 0) {
+                    result += String.format("%s получил кубки в родной деревне: %d (сейчас их %d) \n", players.getName(), trophiesDiff, players.getTrophies());
+                } else if (trophiesDiff < 0) {
+                    result += String.format("%s потерял кубки в родной деревне: %d (сейчас их %d) \n", players.getName(), trophiesDiff, players.getTrophies());
+                }
+
+                // Кубки в в деревне строителя
+                if (vsTrophiesDiff > 0) {
+                    result += String.format("%s получил кубки в деревне строителя: %d (сейчас их %d) \n", players.getName(), vsTrophiesDiff, players.getVersusTrophies());
+                } else if ((vsTrophiesDiff < 0)) {
+                    result += String.format("%s потерял кубки в деревне строителя: %d (сейчас их %d) \n", players.getName(), vsTrophiesDiff, players.getVersusTrophies());
+                }
+
+                if (thDiff > 0) {
+                    result += String.format("%s поднял уровень ратуши до: %d \n", players.getName(), players.getTownHallLevel());
+                }
+
+                // Update table
+                statement.executeUpdate(String.format("UPDATE COC.PLR s SET trophies = %d, vs_trophies = %d, th = %d where s.tag = '%s'", players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel(), players.getTag()));
+//                statement.execute("commit");
+            }
+
+            if (!state) {
+                statement.executeUpdate(String.format("insert into COC.PLR(username, tag, trophies, vs_trophies, th) values('%s', '%s', %d, %d, %d)", players.getName(), players.getTag(), players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel()));
+                result += String.format("Игрок %s добавлен в БД как новый", players.getName());
+            }
+
+
+        } catch (SQLException e) {
+            BotLogger.error(LOGTAG, e.getMessage());
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                    log.debug("connection closed ...");
+                }
+
+            } catch (SQLException e) {
+                // connection close failed.
+                log.error(e.getMessage());
+            }
+        }
+        if(result.equals(""))
+            result = String.format("Нет изменений, у %s все по старому", players.getTag());
+        return result;
     }
 }
