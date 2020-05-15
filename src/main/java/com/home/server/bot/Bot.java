@@ -218,7 +218,7 @@ public class Bot extends TelegramLongPollingBot {
                 sendMsgToMyChanel(result);
             }
         } catch (Exception e) {
-            return "Failed" + e.getMessage();
+            return "Failed : " + e.getMessage();
         }
         return "See you chanel";
     }
