@@ -213,7 +213,7 @@ public class Bot extends TelegramLongPollingBot {
         try {
             ListResult<MembersCommon> members = cocService.getMembers(token, memberTag);
             for (MembersCommon item : members.getItems()) {
-                Players players = cocService.getPlayers(token, item.getTag());
+                Players players = cocService.getPlayers(token, item.getTag().substring(1));
                 String result = herokuSql.checkPlayerInDb(players);
                 sendMsgToMyChanel(result);
             }
