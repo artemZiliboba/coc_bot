@@ -27,7 +27,6 @@ public class HerokuPostgresql {
             Class.forName("org.postgresql.Driver");
         } catch (ClassNotFoundException e) {
             BotLogger.error(LOGTAG, "PostgreSQL JDBC Driver is not found. Include it in your library path ");
-            //log.debug("PostgreSQL JDBC Driver is not found. Include it in your library path ");
             e.printStackTrace();
         }
 
@@ -85,7 +84,7 @@ public class HerokuPostgresql {
 
             } catch (SQLException e) {
                 // connection close failed.
-                log.error("SQL exception : " + e.getMessage());
+                log.error(String.format("SQL exception : %s", e.getMessage()));
             }
         }
     }
@@ -207,7 +206,7 @@ public class HerokuPostgresql {
             }
         }
         if(result.equals(""))
-            result = String.format("Нет изменений, у %s все по старому", players.getTag());
+            result = String.format("Нет изменений, у %s все по старому. (%d / %d)", players.getName(), players.getTrophies(), players.getVersusTrophies());
         return result;
     }
 }
