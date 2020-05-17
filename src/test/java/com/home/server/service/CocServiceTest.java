@@ -2,7 +2,7 @@ package com.home.server.service;
 
 import com.home.server.model.ListResult;
 import com.home.server.model.MyIp;
-import com.home.server.model.Token;
+import com.home.server.model.developer.CocToken;
 import com.home.server.model.locations.LocationId;
 import com.home.server.model.members.MembersCommon;
 import com.home.server.model.players.Players;
@@ -16,42 +16,53 @@ import static org.junit.Assert.assertNotNull;
 @Slf4j
 public class CocServiceTest {
 
+    private static final String COC_URL = System.getenv("COC_URL");
+    private static final String COC_EMAIL = System.getenv("COC_EMAIL");
+    private static final String COC_PASS = System.getenv("COC_PASS");
+    private AuthService authService;
+
     private RestOperations restTemplate = new RestTemplate();
-    private CocService cocService = new CocService(restTemplate, host);
-    private static final String host = "https://api.clashofclans.com";
-    private static final String TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiIsImtpZCI6IjI4YTMxOGY3LTAwMDAtYTFlYi03ZmExLTJjNzQzM2M2Y2NhNSJ9.eyJpc3MiOiJzdXBlcmNlbGwiLCJhdWQiOiJzdXBlcmNlbGw6Z2FtZWFwaSIsImp0aSI6Ijc2MjMyYjM2LTM1NWYtNGZmMS05YjFmLWJkNDQ4MTRiYjMxYyIsImlhdCI6MTU4OTU2NzU3OCwic3ViIjoiZGV2ZWxvcGVyL2M4NTEzYmQyLTdiMGMtMjY4ZC01NTJjLWI0MjZjZTc2NjJhZSIsInNjb3BlcyI6WyJjbGFzaCJdLCJsaW1pdHMiOlt7InRpZXIiOiJkZXZlbG9wZXIvc2lsdmVyIiwidHlwZSI6InRocm90dGxpbmcifSx7ImNpZHJzIjpbIjkxLjI0MC4xMjQuMTMwIl0sInR5cGUiOiJjbGllbnQifV19.oqrDo7csJ6eory66UfgBmSqvbesqk-hPJT8ngM7euh7L6lTjJdhF_mFxYdp9jE3hIrSH_24QqQ3Fe8so8_zOJw";
+    private CocService cocService = new CocService(restTemplate, COC_URL);
+
+
+    public CocServiceTest() {
+        authService = new AuthService(restTemplate, COC_URL);
+    }
+
+    @Test
+    public void getCocToken() {
+
+        CocToken cocToken = authService.getCocToken(COC_EMAIL, COC_PASS);
+        System.out.println(cocToken.getTemporaryAPIToken());
+    }
 
     @Test
     public void getPlayers() {
-        Token token = new Token();
-        token.setAccess_token(TOKEN);
-        Players players = cocService.getPlayers(token, "LCCCGJQYL");
+        CocToken cocToken = authService.getCocToken(COC_EMAIL, COC_PASS);
+
+        Players players = cocService.getPlayers(cocToken, "LCCCGJQYL");
         assertNotNull(players);
     }
 
     @Test
-    public void getMembers(){
-        Token token = new Token();
-        token.setAccess_token(TOKEN);
-        ListResult<MembersCommon> membersCommons = cocService.getMembers(token, "28VQVLVJO");
-        System.out.println(membersCommons);
+    public void getMembers() {
+        CocToken cocToken = authService.getCocToken(COC_EMAIL, COC_PASS);
+        ListResult<MembersCommon> membersCommons = cocService.getMembers(cocToken, "28VQVLVJO");
+        assertNotNull(membersCommons);
     }
 
     @Test
     public void getLocation() {
-        Token token = new Token();
-        token.setAccess_token(TOKEN);
+        CocToken cocToken = authService.getCocToken(COC_EMAIL, COC_PASS);
 
-        LocationId locationId = cocService.getLocations(token, "32000193");
+        LocationId locationId = cocService.getLocations(cocToken, "32000193");
         log.info("LOCATION IDS: " + locationId);
-        assertNotNull(token);
+        assertNotNull(locationId);
     }
 
     @Test
     public void getMyIp() {
-        Token token = new Token();
-
-        MyIp myIp = cocService.getMyIp(token);
+        MyIp myIp = cocService.getMyIp();
         log.info("\n\tMy IP is : " + myIp);
     }
 }

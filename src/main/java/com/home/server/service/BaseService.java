@@ -1,7 +1,7 @@
 package com.home.server.service;
 
 import com.home.server.model.ListResult;
-import com.home.server.model.Token;
+import com.home.server.model.developer.CocToken;
 import com.home.server.model.members.MembersCommon;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
@@ -12,11 +12,11 @@ import org.springframework.web.client.RestOperations;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 
 @Slf4j
 public abstract class BaseService {
     private static final String STATUS_TEXT = " url: %s. %s";
+    private static final String TOKEN_HEAD = "Authorization";
 
     @Getter
     private final RestOperations restTemplate;
@@ -86,10 +86,11 @@ public abstract class BaseService {
         return result;
     }
 
-    protected HttpHeaders prepareRequestHeaders(Token token) {
+    protected HttpHeaders prepareRequestHeaders(CocToken token) {
         HttpHeaders requestHeaders = new HttpHeaders();
         requestHeaders.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         requestHeaders.setContentType(MediaType.APPLICATION_JSON);
+        requestHeaders.put(TOKEN_HEAD, Collections.singletonList("Bearer " + token.getTemporaryAPIToken()));
 
         return requestHeaders;
     }
