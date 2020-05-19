@@ -1,4 +1,4 @@
-package com.home.server.model.telegram.me;
+package com.home.server.model.telegram;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;

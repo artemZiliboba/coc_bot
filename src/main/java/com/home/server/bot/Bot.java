@@ -3,10 +3,10 @@ package com.home.server.bot;
 import com.home.server.db.HerokuPostgresql;
 import com.home.server.model.ListResult;
 import com.home.server.model.MyIp;
-import com.home.server.model.Token;
 import com.home.server.model.developer.CocToken;
 import com.home.server.model.members.MembersCommon;
 import com.home.server.model.players.Players;
+import com.home.server.scheduler.CronTrigger;
 import com.home.server.service.AuthService;
 import com.home.server.service.CocService;
 import com.home.server.service.IAuthService;
@@ -69,13 +69,13 @@ public class Bot extends TelegramLongPollingBot {
             // Создаем экземпляр настроек
             DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
 
-//            // Устанавливаем настройки прокси
-//            if (PROXY_IP != null && PROXY_PORT != null) {
-//                botOptions.setProxyHost(PROXY_IP);
-//                botOptions.setProxyPort(Integer.parseInt(PROXY_PORT));
-//            }
-//            // Выбираем тип прокси: [HTTP|SOCKS4|SOCKS5] (по умолчанию: NO_PROXY)
-//            botOptions.setProxyType(DefaultBotOptions.ProxyType.SOCKS5);
+            // Устанавливаем настройки прокси
+            if (PROXY_IP != null && PROXY_PORT != null) {
+                botOptions.setProxyHost(PROXY_IP);
+                botOptions.setProxyPort(Integer.parseInt(PROXY_PORT));
+            }
+            // Выбираем тип прокси: [HTTP|SOCKS4|SOCKS5] (по умолчанию: NO_PROXY)
+            botOptions.setProxyType(DefaultBotOptions.ProxyType.SOCKS5);
 
             telegramBotsApi.registerBot(new Bot(botOptions));
         } catch (TelegramApiException e) {
@@ -125,8 +125,6 @@ public class Bot extends TelegramLongPollingBot {
             switch (message.getText()) {
                 case "/help":
                     BotLogger.info(LOGTAG, "Hello my friend");
-//                    Token token = new Token();
-//                    token.setAccess_token(herokuSql.getToken());
                     Players players = cocService.getPlayers(cocToken, "PGU8YVRVV");
 
                     // sqliteManager.runQuery(players.getName(), players.getTag(), players.getTownHallLevel(), players.getVersusTrophies(), players.getTrophies());
@@ -152,7 +150,7 @@ public class Bot extends TelegramLongPollingBot {
                     break;
                 case "/ip":
                     MyIp myIp = cocService.getMyIp();
-                    sendMsg(message, "BOT IP : " + myIp.getIp());
+                    sendMsg(message, String.format("BOT IP : %s\nYou chat ID is %s", myIp.getIp(), message.getChatId().toString()));
                     break;
                 case "/start":
                     sendMsg(message, "Hello my lord!");
@@ -166,6 +164,15 @@ public class Bot extends TelegramLongPollingBot {
                     String playerTagArt = "8VP9RGVVQ";
                     String resultArt = checkPlayer(cocToken, playerTagArt);
                     sendMsg(message, resultArt);
+                    break;
+                case "/trigger":
+                    CronTrigger cronTrigger = new CronTrigger();
+                    try {
+                        cronTrigger.startScheduler();
+                    } catch (Exception e) {
+                        log.debug("\n\tXXX Failed start scheduler : " + e.getMessage());
+                        e.printStackTrace();
+                    }
                     break;
                 case "/clan":
                     String clanTag = System.getenv("CLAN_TAG");
@@ -208,8 +215,6 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     private String checkPlayer(CocToken cocToken, String playerTag) {
-//        Token token = new Token();
-//        token.setAccess_token(herokuSql.getToken());
         Players players = cocService.getPlayers(cocToken, playerTag);
         String result = herokuSql.checkPlayerInDb(players);
 
@@ -218,8 +223,6 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     private String checkMembersClan(CocToken cocToken, String memberTag) {
-//        Token token = new Token();
-//        token.setAccess_token(herokuSql.getToken());
 
         try {
             ListResult<MembersCommon> members = cocService.getMembers(cocToken, memberTag);

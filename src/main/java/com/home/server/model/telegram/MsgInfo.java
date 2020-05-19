@@ -1,4 +1,4 @@
-package com.home.server.model.telegram.me;
+package com.home.server.model.telegram;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class Me {
+public class MsgInfo {
     private String ok;
-    private Result result;
+    private ResultMessage result;
 }
