@@ -7,7 +7,7 @@ import org.junit.Test;
 
 @Slf4j
 public class DbTest {
-    private HerokuPostgresql herokuSql = new HerokuPostgresql();
+    private HerokuPostgresql herokuSql = new HerokuPostgresql(null);
 
     @Test
     public void checkPlayerTest(){
