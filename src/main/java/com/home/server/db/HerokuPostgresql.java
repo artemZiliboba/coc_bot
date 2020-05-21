@@ -51,7 +51,7 @@ public class HerokuPostgresql {
             statement.executeUpdate("create table if not exists COC.PLR(plr_id serial primary key, " +
                     "username varchar (50) not null, " +
                     "tag varchar (50) unique not null, " +
-                    "tag_clan varchar (50) unique, " +
+                    "tag_clan varchar (50), " +
                     "trophies integer, " +
                     "vs_trophies integer, " +
                     "th integer)"
