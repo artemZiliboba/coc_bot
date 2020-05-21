@@ -6,10 +6,12 @@ import com.home.server.model.MyIp;
 import com.home.server.model.developer.CocToken;
 import com.home.server.model.members.MembersCommon;
 import com.home.server.model.players.Players;
+import com.home.server.model.telegram.MsgInfo;
 import com.home.server.scheduler.CronTrigger;
 import com.home.server.service.AuthService;
 import com.home.server.service.CocService;
 import com.home.server.service.IAuthService;
+import com.home.server.service.TelegramApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
@@ -35,8 +37,10 @@ import java.util.List;
 public class Bot extends TelegramLongPollingBot {
 
     private static final String HOST = "https://api.clashofclans.com";
+    private static final String HOST_TG = "https://api.telegram.org/bot%s";
     private static final String BOT_TOKEN = System.getenv("BOT_TOKEN");
     private static final String LOGTAG = "COMMANDSHANDLER";
+
 
     // proxy config
     private static final String PROXY_IP = System.getenv("PROXY_IP");
@@ -45,6 +49,7 @@ public class Bot extends TelegramLongPollingBot {
     private HerokuPostgresql herokuSql = new HerokuPostgresql();
     private RestOperations restTemplate = new RestTemplate();
     private CocService cocService = new CocService(restTemplate, HOST);
+    private TelegramApi telegramApi = new TelegramApi(restTemplate, HOST);
 
     // COC auth service
     private IAuthService authService;
@@ -166,13 +171,15 @@ public class Bot extends TelegramLongPollingBot {
                     sendMsg(message, resultArt);
                     break;
                 case "/trigger":
-                    CronTrigger cronTrigger = new CronTrigger();
-                    try {
-                        cronTrigger.startScheduler();
-                    } catch (Exception e) {
-                        log.debug("\n\tXXX Failed start scheduler : " + e.getMessage());
-                        e.printStackTrace();
-                    }
+                    MsgInfo msgInfo = telegramApi.SndMsg("392060526", "Ololotext");
+                    log.debug("Message is + " + msgInfo.getOk());
+//                    CronTrigger cronTrigger = new CronTrigger();
+//                    try {
+//                        cronTrigger.startScheduler();
+//                    } catch (Exception e) {
+//                        log.debug("\n\tXXX Failed start scheduler : " + e.getMessage());
+//                        e.printStackTrace();
+//                    }
                     break;
                 case "/clan":
                     String clanTag = System.getenv("CLAN_TAG");
