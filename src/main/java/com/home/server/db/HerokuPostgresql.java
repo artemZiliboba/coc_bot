@@ -218,7 +218,7 @@ public class HerokuPostgresql {
 
 
         } catch (SQLException e) {
-            BotLogger.error(LOGTAG, e.getMessage());
+            BotLogger.error(LOGTAG + " checkPlayerIn DB ", e.getMessage());
         } finally {
             try {
                 if (connection != null) {
@@ -263,7 +263,7 @@ public class HerokuPostgresql {
             }
 
         } catch (SQLException e) {
-            BotLogger.error(LOGTAG, e.getMessage());
+            BotLogger.error(LOGTAG + " checkClanMembers DB ", e.getMessage());
         } finally {
             try {
                 if (connection != null) {
