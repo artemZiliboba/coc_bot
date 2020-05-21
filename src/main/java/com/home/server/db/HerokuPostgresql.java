@@ -1,11 +1,20 @@
 package com.home.server.db;
 
+import com.home.server.dto.MembersData;
+import com.home.server.dto.OneMember;
 import com.home.server.dto.PlayerData;
+import com.home.server.model.developer.CocToken;
 import com.home.server.model.players.Players;
+import com.home.server.service.CocService;
+import com.home.server.service.IAuthService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.client.RestOperations;
+import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.meta.logging.BotLogger;
 
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 public class HerokuPostgresql {
@@ -16,7 +25,20 @@ public class HerokuPostgresql {
     private static final String PASS = System.getenv("DB_PASS");
     private static final Integer QUERY_TIMEOUT = 30; // seconds
 
+    // COC service
+    private static final String HOST = "https://api.clashofclans.com";
+    private static final String COC_URL = System.getenv("COC_URL");
+    private static final String COC_PASS = System.getenv("COC_PASS");
+    private static final String COC_EMAIL = System.getenv("COC_EMAIL");
+    private RestOperations restTemplate = new RestTemplate();
+    private CocService cocService = new CocService(restTemplate, HOST);
+    private IAuthService authService;
+
     private static final String LOGTAG = "CONNECTIONDB";
+
+    public HerokuPostgresql(IAuthService authService) {
+        this.authService = authService;
+    }
 
     public void initPostgresDb() {
 
@@ -209,8 +231,51 @@ public class HerokuPostgresql {
                 log.error(e.getMessage());
             }
         }
-        if(result.equals(""))
-            result = String.format("Нет изменений, у %s все по старому. (%d / %d)", players.getName(), players.getTrophies(), players.getVersusTrophies());
+//        if(result.equals(""))
+//            result = String.format("Нет изменений, у %s все по старому. (%d / %d)", players.getName(), players.getTrophies(), players.getVersusTrophies());
+        return result;
+    }
+
+    public MembersData checkClanMembers(String clanTag) {
+        MembersData result = new MembersData();
+        List<OneMember> oneMemberList = new ArrayList<>();
+
+        Connection connection = null;
+
+        try {
+            connection = DriverManager
+                    .getConnection(DB_URL, USER, PASS);
+
+            Statement statement = connection.createStatement();
+
+            ResultSet rs = statement.executeQuery(String.format("select * from COC.PLR s WHERE s.tag_clan = %s", clanTag));
+
+            while (rs.next()) {
+                log.debug("Read data from query...");
+                CocToken cocToken = authService.getCocToken(COC_EMAIL, COC_PASS);
+                Players players = cocService.getPlayers(cocToken, rs.getString("tag"));
+                String playerInfo = checkPlayerInDb(players);
+
+                log.debug("\n\t = = = = = = = = = Get data about player : " + players.getName());
+                oneMemberList.add(new OneMember(players.getName(), playerInfo));
+                log.debug("Player name : " + players.getName());
+                log.debug("Player info : " + playerInfo);
+            }
+
+        } catch (SQLException e) {
+            BotLogger.error(LOGTAG, e.getMessage());
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                    log.debug("connection closed ...");
+                }
+
+            } catch (SQLException e) {
+                // connection close failed.
+                log.error(e.getMessage());
+            }
+        }
         return result;
     }
 }

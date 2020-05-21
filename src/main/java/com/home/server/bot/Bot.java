@@ -37,7 +37,6 @@ import java.util.List;
 public class Bot extends TelegramLongPollingBot {
 
     private static final String HOST = "https://api.clashofclans.com";
-    private static final String HOST_TG = "https://api.telegram.org/bot%s";
     private static final String BOT_TOKEN = System.getenv("BOT_TOKEN");
     private static final String LOGTAG = "COMMANDSHANDLER";
 
@@ -46,7 +45,7 @@ public class Bot extends TelegramLongPollingBot {
     private static final String PROXY_IP = System.getenv("PROXY_IP");
     private static final String PROXY_PORT = System.getenv("PROXY_PORT");
 
-    private HerokuPostgresql herokuSql = new HerokuPostgresql();
+    private HerokuPostgresql herokuSql = new HerokuPostgresql(null);
     private RestOperations restTemplate = new RestTemplate();
     private CocService cocService = new CocService(restTemplate, HOST);
     private TelegramApi telegramApi = new TelegramApi(restTemplate, HOST);
@@ -193,6 +192,9 @@ public class Bot extends TelegramLongPollingBot {
                     } catch (TelegramApiException e) {
                         e.printStackTrace();
                     }
+                    break;
+                case "/wtf":
+                    herokuSql.checkClanMembers("YLRRJ9PJ");
                     break;
                 default:
             }
