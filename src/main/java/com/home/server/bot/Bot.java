@@ -171,15 +171,15 @@ public class Bot extends TelegramLongPollingBot {
                     sendMsg(message, resultArt);
                     break;
                 case "/trigger":
-                    //MsgInfo msgInfo = telegramApi.SndMsg("392060526", "Ololotext");
-                    log.debug("Start cron");
                     CronTrigger cronTrigger = new CronTrigger();
                     try {
                         log.debug("I in trigger");
                         cronTrigger.startScheduler();
+                        sendMsg(message, "Scheduler started.");
                     } catch (Exception e) {
-                        log.debug("\n\tXXX Failed start scheduler : " + e.getMessage());
+                        log.debug("Failed start scheduler : " + e.getMessage());
                         e.printStackTrace();
+                        sendMsg(message, e.getMessage());
                     }
                     break;
                 case "/clan":
@@ -231,18 +231,19 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     private String checkMembersClan(CocToken cocToken, String memberTag) {
+        String result = "";
 
         try {
             ListResult<MembersCommon> members = cocService.getMembers(cocToken, memberTag);
             for (MembersCommon item : members.getItems()) {
                 Players players = cocService.getPlayers(cocToken, item.getTag().substring(1));
-                String result = herokuSql.checkPlayerInDb(players);
-                sendMsgToMyChanel(result);
+                result = herokuSql.checkPlayerInDb(players);
             }
         } catch (Exception e) {
             return "Failed : " + e.getMessage();
         }
-        return "See you chanel";
+
+        return result;
     }
 
     @Override
