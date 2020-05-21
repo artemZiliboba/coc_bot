@@ -51,6 +51,7 @@ public class HerokuPostgresql {
             statement.executeUpdate("create table if not exists COC.PLR(plr_id serial primary key, " +
                     "username varchar (50) not null, " +
                     "tag varchar (50) unique not null, " +
+                    "tag_clan varchar (50) unique not null, " +
                     "trophies integer, " +
                     "vs_trophies integer, " +
                     "th integer)"
@@ -186,7 +187,7 @@ public class HerokuPostgresql {
             }
 
             if (!state) {
-                statement.executeUpdate(String.format("insert into COC.PLR(username, tag, trophies, vs_trophies, th) values('%s', '%s', %d, %d, %d)", players.getName(), players.getTag(), players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel()));
+                statement.executeUpdate(String.format("insert into COC.PLR(username, tag, tag_clan, trophies, vs_trophies, th) values('%s', '%s', %s, %d, %d, %d)", players.getName(), players.getTag(), players.getClan().getTag(), players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel()));
                 result += String.format("Игрок %s добавлен в БД как новый", players.getName());
             }
 
