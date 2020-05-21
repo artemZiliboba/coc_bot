@@ -7,7 +7,6 @@ import com.home.server.model.developer.CocToken;
 import com.home.server.model.members.MembersCommon;
 import com.home.server.model.players.Players;
 import com.home.server.model.telegram.MsgInfo;
-import com.home.server.scheduler.CronTrigger;
 import com.home.server.service.AuthService;
 import com.home.server.service.CocService;
 import com.home.server.service.IAuthService;
@@ -74,13 +73,13 @@ public class Bot extends TelegramLongPollingBot {
             // Создаем экземпляр настроек
             DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
 
-            // Устанавливаем настройки прокси
-            if (PROXY_IP != null && PROXY_PORT != null) {
-                botOptions.setProxyHost(PROXY_IP);
-                botOptions.setProxyPort(Integer.parseInt(PROXY_PORT));
-            }
-            // Выбираем тип прокси: [HTTP|SOCKS4|SOCKS5] (по умолчанию: NO_PROXY)
-            botOptions.setProxyType(DefaultBotOptions.ProxyType.SOCKS5);
+//            // Устанавливаем настройки прокси
+//            if (PROXY_IP != null && PROXY_PORT != null) {
+//                botOptions.setProxyHost(PROXY_IP);
+//                botOptions.setProxyPort(Integer.parseInt(PROXY_PORT));
+//            }
+//            // Выбираем тип прокси: [HTTP|SOCKS4|SOCKS5] (по умолчанию: NO_PROXY)
+//            botOptions.setProxyType(DefaultBotOptions.ProxyType.SOCKS5);
 
             telegramBotsApi.registerBot(new Bot(botOptions));
         } catch (TelegramApiException e) {
