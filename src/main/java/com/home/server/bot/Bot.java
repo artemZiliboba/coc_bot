@@ -7,6 +7,7 @@ import com.home.server.model.developer.CocToken;
 import com.home.server.model.members.MembersCommon;
 import com.home.server.model.players.Players;
 import com.home.server.model.telegram.MsgInfo;
+import com.home.server.scheduler.CronTrigger;
 import com.home.server.service.AuthService;
 import com.home.server.service.CocService;
 import com.home.server.service.IAuthService;
@@ -170,15 +171,16 @@ public class Bot extends TelegramLongPollingBot {
                     sendMsg(message, resultArt);
                     break;
                 case "/trigger":
-                    MsgInfo msgInfo = telegramApi.SndMsg("392060526", "Ololotext");
-                    log.debug("Message is + " + msgInfo.getOk());
-//                    CronTrigger cronTrigger = new CronTrigger();
-//                    try {
-//                        cronTrigger.startScheduler();
-//                    } catch (Exception e) {
-//                        log.debug("\n\tXXX Failed start scheduler : " + e.getMessage());
-//                        e.printStackTrace();
-//                    }
+                    //MsgInfo msgInfo = telegramApi.SndMsg("392060526", "Ololotext");
+                    log.debug("Start cron");
+                    CronTrigger cronTrigger = new CronTrigger();
+                    try {
+                        log.debug("I in trigger");
+                        cronTrigger.startScheduler();
+                    } catch (Exception e) {
+                        log.debug("\n\tXXX Failed start scheduler : " + e.getMessage());
+                        e.printStackTrace();
+                    }
                     break;
                 case "/clan":
                     String clanTag = System.getenv("CLAN_TAG");
