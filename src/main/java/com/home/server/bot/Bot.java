@@ -45,7 +45,7 @@ public class Bot extends TelegramLongPollingBot {
     private static final String PROXY_IP = System.getenv("PROXY_IP");
     private static final String PROXY_PORT = System.getenv("PROXY_PORT");
 
-    private HerokuPostgresql herokuSql = new HerokuPostgresql(null);
+    private HerokuPostgresql herokuSql = new HerokuPostgresql();
     private RestOperations restTemplate = new RestTemplate();
     private CocService cocService = new CocService(restTemplate, HOST);
     private TelegramApi telegramApi = new TelegramApi(restTemplate, HOST);

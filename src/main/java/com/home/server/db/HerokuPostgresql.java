@@ -5,8 +5,8 @@ import com.home.server.dto.OneMember;
 import com.home.server.dto.PlayerData;
 import com.home.server.model.developer.CocToken;
 import com.home.server.model.players.Players;
+import com.home.server.service.AuthService;
 import com.home.server.service.CocService;
-import com.home.server.service.IAuthService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
@@ -32,13 +32,13 @@ public class HerokuPostgresql {
     private static final String COC_EMAIL = System.getenv("COC_EMAIL");
     private RestOperations restTemplate = new RestTemplate();
     private CocService cocService = new CocService(restTemplate, HOST);
-    private IAuthService authService;
+    private AuthService authService = new AuthService(restTemplate, COC_URL);
 
     private static final String LOGTAG = "CONNECTIONDB";
 
-    public HerokuPostgresql(IAuthService authService) {
-        this.authService = authService;
-    }
+//    public HerokuPostgresql(IAuthService authService) {
+//        this.authService = authService;
+//    }
 
     public void initPostgresDb() {
 
