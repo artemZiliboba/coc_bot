@@ -231,13 +231,14 @@ public class Bot extends TelegramLongPollingBot {
     }
 
     private String checkMembersClan(CocToken cocToken, String clanTag) {
-        String result = "";
+        String result = "DONE";
 
         try {
             ListResult<MembersCommon> members = cocService.getMembers(cocToken, clanTag);
             for (MembersCommon item : members.getItems()) {
                 Players players = cocService.getPlayers(cocToken, item.getTag().substring(1));
-                result = herokuSql.checkPlayerInDb(players);
+                String temp = herokuSql.checkPlayerInDb(players);
+                log.debug(String.format("Result for player %s is : %s", players.getName(), temp));
             }
         } catch (Exception e) {
             return "Failed : " + e.getMessage();
