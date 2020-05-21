@@ -190,7 +190,7 @@ public class HerokuPostgresql {
 
             if (!state) {
                 log.debug("\n\tЭтого игрока еще нет в БД, начинаем добавлять...");
-                statement.executeUpdate(String.format("insert into COC.PLR(username, tag, tag_clan, trophies, vs_trophies, th) values('%s', '%s', '%s', %d, %d, %d)", players.getName(), players.getTag(), players.getClan().getTag(), players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel()));
+                statement.executeUpdate(String.format("insert into COC.PLR(username, tag, tag_clan, trophies, vs_trophies, th) values('%s', '%s', '%s', %d, %d, %d)", players.getName(), players.getTag().substring(1), players.getClan().getTag().substring(1), players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel()));
                 result += String.format("Игрок %s добавлен в БД как новый", players.getName());
             }
 
