@@ -248,7 +248,7 @@ public class HerokuPostgresql {
 
             Statement statement = connection.createStatement();
 
-            ResultSet rs = statement.executeQuery(String.format("select * from COC.PLR s WHERE s.tag_clan = %s", clanTag));
+            ResultSet rs = statement.executeQuery("select * from COC.PLR s WHERE s.tag_clan = 'clanTag';");
 
             while (rs.next()) {
                 log.debug("Read data from query...");
