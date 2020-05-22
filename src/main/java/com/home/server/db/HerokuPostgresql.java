@@ -210,7 +210,7 @@ public class HerokuPostgresql {
 
                 // Update table
                 statement.executeUpdate(String.format("UPDATE COC.PLR s SET trophies = %d, vs_trophies = %d, th = %d where s.tag = '%s'", players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel(), players.getTag()));
-//                statement.execute("commit");
+                statement.execute("commit");
             }
 
             if (!state) {

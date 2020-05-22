@@ -13,7 +13,7 @@ public class DbTest {
     public void checkPlayerTest(){
         Players players = new Players();
         players.setName("8VP9RGVVQ");
-        players.setTag("8VP9RGVVQ");
+        players.setTag("#8VP9RGVVQ");
         players.setTrophies(2670);
         players.setVersusTrophies(4270);
         players.setTownHallLevel(13);
