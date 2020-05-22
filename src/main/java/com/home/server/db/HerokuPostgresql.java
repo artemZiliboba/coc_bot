@@ -192,20 +192,20 @@ public class HerokuPostgresql {
 
                 // Кубки в родной деревне
                 if (trophiesDiff > 0) {
-                    result += String.format("%s получил кубки в родной деревне: %d (сейчас их %d) \n", players.getName(), trophiesDiff, players.getTrophies());
+                    result += String.format("Home village: %d \uD83C\uDFC6 \n \n", trophiesDiff);
                 } else if (trophiesDiff < 0) {
-                    result += String.format("%s потерял кубки в родной деревне: %d (сейчас их %d) \n", players.getName(), trophiesDiff, players.getTrophies());
+                    result += String.format("Home village: %d \uD83C\uDFC6 \n \n", trophiesDiff);
                 }
 
                 // Кубки в в деревне строителя
                 if (vsTrophiesDiff > 0) {
-                    result += String.format("%s получил кубки в деревне строителя: %d (сейчас их %d) \n", players.getName(), vsTrophiesDiff, players.getVersusTrophies());
+                    result += String.format("Builder base: %d \uD83C\uDFC6 \n", vsTrophiesDiff);
                 } else if ((vsTrophiesDiff < 0)) {
-                    result += String.format("%s потерял кубки в деревне строителя: %d (сейчас их %d) \n", players.getName(), vsTrophiesDiff, players.getVersusTrophies());
+                    result += String.format("Builder base: %d \uD83C\uDFC6 \n", vsTrophiesDiff);
                 }
 
                 if (thDiff > 0) {
-                    result += String.format("%s поднял уровень ратуши до: %d \n", players.getName(), players.getTownHallLevel());
+                    result += String.format("Up town hall level: %d \n", players.getName(), players.getTownHallLevel());
                 }
 
                 // Update table
@@ -235,7 +235,7 @@ public class HerokuPostgresql {
             }
         }
         // TODO пустое сообщение падает в ошибку, надо доабвить проверку перед отправкой, чтобы не пытаться отправить пустоту.
-        if(result.equals(""))
+        if (result.equals(""))
             result += String.format("Нет изменений, у %s все по старому. (%d / %d)", players.getName(), players.getTrophies(), players.getVersusTrophies());
         return result;
     }
