@@ -2,10 +2,13 @@ package com.home.server.service;
 
 import com.home.server.model.telegram.Me;
 import com.home.server.model.telegram.MsgInfo;
+import com.sun.deploy.net.URLEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestOperations;
+
+import java.io.UnsupportedEncodingException;
 
 @Slf4j
 public class TelegramApi extends BaseService implements ITelegramApi {
@@ -30,6 +33,11 @@ public class TelegramApi extends BaseService implements ITelegramApi {
 
     @Override
     public MsgInfo SndMsg(String chatId, String text) {
+        try {
+            text = URLEncoder.encode(text, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            log.error("Encode URL text " + e.getMessage());
+        }
         log.debug(String.format("Send message to chatId %s", chatId));
         String url = String.format(HOST + SEND_MESSAGE, BOT_TOKEN, chatId, text);
         HttpHeaders httpHeaders = new HttpHeaders();
