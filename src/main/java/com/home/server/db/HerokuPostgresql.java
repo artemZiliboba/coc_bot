@@ -161,7 +161,7 @@ public class HerokuPostgresql {
                     .getConnection(DB_URL, USER, PASS);
 
             Statement statement = connection.createStatement();
-            log.debug("Check player with tag : " + players.getTag());
+            log.debug("Check player with name : " + players.getName());
 
             PlayerData playerData = null;
 
@@ -231,8 +231,9 @@ public class HerokuPostgresql {
                 log.error(e.getMessage());
             }
         }
-//        if(result.equals(""))
-//            result = String.format("Нет изменений, у %s все по старому. (%d / %d)", players.getName(), players.getTrophies(), players.getVersusTrophies());
+        // TODO пустое сообщение падает в ошибку, надо доабвить проверку перед отправкой, чтобы не пытаться отправить пустоту.
+        if(result.equals(""))
+            result = String.format("Нет изменений, у %s все по старому. (%d / %d)", players.getName(), players.getTrophies(), players.getVersusTrophies());
         return result;
     }
 
@@ -276,6 +277,7 @@ public class HerokuPostgresql {
                 log.error(e.getMessage());
             }
         }
+        result.setOneMemberList(oneMemberList);
         return result;
     }
 }

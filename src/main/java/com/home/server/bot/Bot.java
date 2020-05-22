@@ -1,6 +1,7 @@
 package com.home.server.bot;
 
 import com.home.server.db.HerokuPostgresql;
+import com.home.server.dto.MembersData;
 import com.home.server.model.ListResult;
 import com.home.server.model.MyIp;
 import com.home.server.model.developer.CocToken;
@@ -194,7 +195,9 @@ public class Bot extends TelegramLongPollingBot {
                     }
                     break;
                 case "/wtf":
-                    herokuSql.checkClanMembers("YLRRJ9PJ");
+                    MembersData membersData = new MembersData();
+                    membersData = herokuSql.checkClanMembers("YLRRJ9PJ");
+                    // todo перебрать результат для отправки
                     break;
                 default:
             }
