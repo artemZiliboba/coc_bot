@@ -12,11 +12,11 @@ public class DbTest {
     @Test
     public void checkPlayerTest(){
         Players players = new Players();
-        players.setName("8VP9RGVVQ");
+        players.setName("Artem");
         players.setTag("#8VP9RGVVQ");
-        players.setTrophies(2670);
-        players.setVersusTrophies(4270);
-        players.setTownHallLevel(13);
+        players.setTrophies(2688);
+        players.setVersusTrophies(4275);
+        players.setTownHallLevel(11);
 
         String result = herokuSql.checkPlayerInDb(players);
         log.debug("Result : " + result);

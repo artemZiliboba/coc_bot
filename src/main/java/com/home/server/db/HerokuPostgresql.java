@@ -152,7 +152,7 @@ public class HerokuPostgresql {
     }
 
     public String checkPlayerInDb(Players players) {
-        String result = "";
+        String result = String.format("%s ( HW:%d\uD83C\uDFC6 | BB:%d\uD83C\uDFC6 | THL:%d\uD83C\uDFF0) \n", players.getName(), players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel());
         boolean state = false;
         Connection connection = null;
 
@@ -185,7 +185,7 @@ public class HerokuPostgresql {
             }
 
             if (state) {
-                log.debug("\n\tЭтот игрок уже есть в БД, начинаем проверять его изменения...");
+                log.debug(String.format("Игрок %s(%s) уже есть в БД, начинаем проверять его изменения...", players.getName(), players.getTag()));
                 int trophiesDiff = players.getTrophies() - playerData.getTrophies();
                 int vsTrophiesDiff = players.getVersusTrophies() - playerData.getVs_trophies();
                 int thDiff = players.getTownHallLevel() - playerData.getTh();
@@ -209,8 +209,8 @@ public class HerokuPostgresql {
                 }
 
                 // Update table
-                statement.executeUpdate(String.format("UPDATE COC.PLR s SET trophies = %d, vs_trophies = %d, th = %d where s.tag = '%s'", players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel(), players.getTag()));
-                statement.execute("commit");
+                statement.executeUpdate(String.format("UPDATE COC.PLR s SET trophies = %d, vs_trophies = %d, th = %d where s.tag = '%s'", players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel(), players.getTag().substring(1)));
+//                statement.execute("commit");
             }
 
             if (!state) {
@@ -236,7 +236,7 @@ public class HerokuPostgresql {
         }
         // TODO пустое сообщение падает в ошибку, надо доабвить проверку перед отправкой, чтобы не пытаться отправить пустоту.
         if(result.equals(""))
-            result = String.format("Нет изменений, у %s все по старому. (%d / %d)", players.getName(), players.getTrophies(), players.getVersusTrophies());
+            result += String.format("Нет изменений, у %s все по старому. (%d / %d)", players.getName(), players.getTrophies(), players.getVersusTrophies());
         return result;
     }
 
