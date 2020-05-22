@@ -155,7 +155,7 @@ public class Bot extends TelegramLongPollingBot {
                     break;
                 case "/ip":
                     MyIp myIp = cocService.getMyIp();
-                    sendMsg(message, String.format("BOT IP : %s\nYou chat ID is %s", myIp.getIp(), message.getChatId().toString()));
+                    sendMsg(message, String.format("BOT IP : %s\nYou chat ID : %s", myIp.getIp(), message.getChatId().toString()));
                     break;
                 case "/start":
                     sendMsg(message, "Hello my lord!");
@@ -198,7 +198,7 @@ public class Bot extends TelegramLongPollingBot {
                     MembersData membersData = new MembersData();
                     membersData = herokuSql.checkClanMembers("YLRRJ9PJ");
                     // todo перебрать результат для отправки
-                    sendMsg(message, membersData.toString().substring(1,30));
+                    sendMsg(message, String.format("Size membersData : %d", membersData.getOneMemberList().size()));
                     break;
                 default:
             }
