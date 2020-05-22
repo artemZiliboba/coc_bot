@@ -12,8 +12,8 @@ public class DbTest {
     @Test
     public void checkPlayerTest(){
         Players players = new Players();
-        players.setName("DEMO_NAME_2");
-        players.setTag("DEMO_TAG_2");
+        players.setName("8VP9RGVVQ");
+        players.setTag("8VP9RGVVQ");
         players.setTrophies(2670);
         players.setVersusTrophies(4275);
         players.setTownHallLevel(13);
