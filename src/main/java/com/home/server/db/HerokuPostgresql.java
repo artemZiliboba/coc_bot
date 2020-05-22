@@ -152,7 +152,7 @@ public class HerokuPostgresql {
     }
 
     public String checkPlayerInDb(Players players) {
-        String result = String.format("%s ( HW:%d\uD83C\uDFC6 | BB:%d\uD83C\uDFC6 | THL:%d\uD83C\uDFF0) \n", players.getName(), players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel());
+        String result = String.format("%s\n", players.getName());
         boolean state = false;
         Connection connection = null;
 
@@ -192,20 +192,20 @@ public class HerokuPostgresql {
 
                 // Кубки в родной деревне
                 if (trophiesDiff > 0) {
-                    result += String.format("Home village: %d \uD83C\uDFC6 \n \n", trophiesDiff);
+                    result += String.format("Up HV trophies: %d ↑\n", trophiesDiff);
                 } else if (trophiesDiff < 0) {
-                    result += String.format("Home village: %d \uD83C\uDFC6 \n \n", trophiesDiff);
+                    result += String.format("Down HV trophies: %d ↓\n", trophiesDiff);
                 }
 
                 // Кубки в в деревне строителя
                 if (vsTrophiesDiff > 0) {
-                    result += String.format("Builder base: %d \uD83C\uDFC6 \n", vsTrophiesDiff);
+                    result += String.format("Up BB trophies: %d ↑\n", vsTrophiesDiff);
                 } else if ((vsTrophiesDiff < 0)) {
-                    result += String.format("Builder base: %d \uD83C\uDFC6 \n", vsTrophiesDiff);
+                    result += String.format("Down BB trophies: %d ↓\n", vsTrophiesDiff);
                 }
 
                 if (thDiff > 0) {
-                    result += String.format("Up town hall level: %d \n", players.getName(), players.getTownHallLevel());
+                    result += String.format("Up TH level: %d\n", players.getTownHallLevel());
                 }
 
                 // Update table
@@ -237,7 +237,7 @@ public class HerokuPostgresql {
         // TODO пустое сообщение падает в ошибку, надо доабвить проверку перед отправкой, чтобы не пытаться отправить пустоту.
         if (result.equals(""))
             result += String.format("Нет изменений, у %s все по старому. (%d / %d)", players.getName(), players.getTrophies(), players.getVersusTrophies());
-        return result;
+        return result + String.format("\uD83C\uDFC6(HW:%d|BB:%d)", players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel());
     }
 
     public MembersData checkClanMembers(String clanTag) {
