@@ -5,8 +5,10 @@ import com.home.server.dto.OneMember;
 import com.home.server.dto.PlayerData;
 import com.home.server.model.developer.CocToken;
 import com.home.server.model.players.Players;
+import com.home.server.model.telegram.MsgInfo;
 import com.home.server.service.AuthService;
 import com.home.server.service.CocService;
+import com.home.server.service.TelegramApi;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
@@ -33,6 +35,7 @@ public class HerokuPostgresql {
     private RestOperations restTemplate = new RestTemplate();
     private CocService cocService = new CocService(restTemplate, HOST);
     private AuthService authService = new AuthService(restTemplate, COC_URL);
+    private TelegramApi telegramApi = new TelegramApi(restTemplate, "https://api.telegram.org/bot%s");
 
     private static final String LOGTAG = "CONNECTIONDB";
 
@@ -152,7 +155,7 @@ public class HerokuPostgresql {
     }
 
     public String checkPlayerInDb(Players players) {
-        String result = String.format("%s\n", players.getName());
+        String result = String.format("%s\n\n", players.getName());
         boolean state = false;
         Connection connection = null;
 
@@ -235,9 +238,10 @@ public class HerokuPostgresql {
             }
         }
         // TODO пустое сообщение падает в ошибку, надо доабвить проверку перед отправкой, чтобы не пытаться отправить пустоту.
-        if (result.equals(""))
-            result += String.format("Нет изменений, у %s все по старому. (%d / %d)", players.getName(), players.getTrophies(), players.getVersusTrophies());
-        return result + String.format("\uD83C\uDFC6(HW:%d|BB:%d)", players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel());
+        if (result.length() > 10) {
+            MsgInfo msgInfo = telegramApi.SndMsg("392060526", result);
+        }
+        return result + String.format("\uD83C\uDFC6(HV:%d|BB:%d)", players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel());
     }
 
     public MembersData checkClanMembers(String clanTag) {

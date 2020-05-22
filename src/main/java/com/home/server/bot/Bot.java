@@ -74,7 +74,7 @@ public class Bot extends TelegramLongPollingBot {
             // Создаем экземпляр настроек
             DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
 
-//            // Устанавливаем настройки прокси
+            // Устанавливаем настройки прокси
 //            if (PROXY_IP != null && PROXY_PORT != null) {
 //                botOptions.setProxyHost(PROXY_IP);
 //                botOptions.setProxyPort(Integer.parseInt(PROXY_PORT));
