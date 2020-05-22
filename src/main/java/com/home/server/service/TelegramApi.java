@@ -2,13 +2,13 @@ package com.home.server.service;
 
 import com.home.server.model.telegram.Me;
 import com.home.server.model.telegram.MsgInfo;
-import com.sun.deploy.net.URLEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.client.RestOperations;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 @Slf4j
 public class TelegramApi extends BaseService implements ITelegramApi {
