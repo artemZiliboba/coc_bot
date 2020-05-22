@@ -165,9 +165,9 @@ public class HerokuPostgresql {
 
             PlayerData playerData = null;
 
-            log.debug(" Player tag is : " + players.getTag().substring(1));
+            log.debug(" Player tag is : " + players.getTag());
             // If player exists in DB
-            ResultSet rs = statement.executeQuery("select * from COC.PLR s WHERE s.tag = '" + players.getTag() + "';");
+            ResultSet rs = statement.executeQuery("select * from COC.PLR s WHERE s.tag = '" + players.getTag().substring(1) + "';");
             log.debug("TAG IS : " + players.getTag());
 
             while (rs.next()) {
