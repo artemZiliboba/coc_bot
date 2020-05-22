@@ -198,6 +198,7 @@ public class Bot extends TelegramLongPollingBot {
                     MembersData membersData = new MembersData();
                     membersData = herokuSql.checkClanMembers("YLRRJ9PJ");
                     // todo перебрать результат для отправки
+                    sendMsg(message, membersData.toString().substring(1,30));
                     break;
                 default:
             }
