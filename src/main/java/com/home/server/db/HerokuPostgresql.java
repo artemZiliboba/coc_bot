@@ -14,6 +14,8 @@ import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.meta.logging.BotLogger;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -155,7 +157,15 @@ public class HerokuPostgresql {
     }
 
     public String checkPlayerInDb(Players players) {
-        String result = String.format("%s\n\n", players.getName());
+        String playerName = players.getName();
+
+        try {
+            playerName = URLEncoder.encode(playerName, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            log.error("Encode URL text " + e.getMessage());
+        }
+
+        String result = String.format("%s\n\n", playerName);
         boolean state = false;
         Connection connection = null;
 

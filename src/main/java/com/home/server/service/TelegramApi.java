@@ -33,12 +33,8 @@ public class TelegramApi extends BaseService implements ITelegramApi {
 
     @Override
     public MsgInfo SndMsg(String chatId, String text) {
-        try {
-            text = URLEncoder.encode(text, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            log.error("Encode URL text " + e.getMessage());
-        }
         log.debug(String.format("Send message to chatId %s", chatId));
+
         String url = String.format(HOST + SEND_MESSAGE, BOT_TOKEN, chatId, text);
         HttpHeaders httpHeaders = new HttpHeaders();
         return request(url, HttpMethod.GET, httpHeaders, MsgInfo.class);
