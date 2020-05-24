@@ -25,15 +25,15 @@ public class Service extends TelegramLongPollingBot implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         sendMsg("Please wait, I'm checking members...");
 
-//        MembersData membersData = herokuSql.checkClanMembers("YLRRJ9PJ");
-//        if(Objects.nonNull(membersData) && membersData.getOneMemberList().size() > 1)
-//            sendMsg(String.format("Found changes for %d member(s)", membersData.getOneMemberList().size()));
-//        else
-//            sendMsg("Without changes...\uD83E\uDD37\u200D♂");
-//        for (OneMember item : membersData.getOneMemberList()) {
-//            log.debug("\n\t==== START SEND to" + item.getName() + " === with result :" + item.getResult() + "\n");
-//            sendMsg(item.getResult());
-//        }
+        MembersData membersData = herokuSql.checkClanMembers("YLRRJ9PJ");
+        if(Objects.nonNull(membersData) && membersData.getOneMemberList().size() > 1)
+            sendMsg(String.format("Found changes for %d member(s)", membersData.getOneMemberList().size()));
+        else
+            sendMsg("Without changes...\uD83E\uDD37\u200D♂");
+        for (OneMember item : membersData.getOneMemberList()) {
+            log.debug("\n\t==== START SEND to" + item.getName() + " === with result :" + item.getResult() + "\n");
+            sendMsg(item.getResult());
+        }
     }
 
 

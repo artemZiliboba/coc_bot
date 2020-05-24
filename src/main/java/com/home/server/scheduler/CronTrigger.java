@@ -23,7 +23,8 @@ public class CronTrigger {
                 .newTrigger()
                 .withIdentity("checkPlayer", "group1")
                 .withSchedule(
-                        CronScheduleBuilder.cronSchedule("0/10 * * * * ?"))
+                        //CronScheduleBuilder.cronSchedule("* 0/1 * * * ?"))
+                        CronScheduleBuilder.cronSchedule("0 * * ? * *"))
                 .build();
 
         // Start
