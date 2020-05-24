@@ -170,7 +170,7 @@ public class Bot extends TelegramLongPollingBot {
                     sendMsg(message, resultGroma, true);
                     break;
                 case "/artem":
-                    String playerTagArt = "28VQVLVJ0";
+                    String playerTagArt = "8VP9RGVVQ";
                     String resultArt = checkPlayer(cocToken, playerTagArt);
                     sendMsg(message, resultArt, true);
                     break;
