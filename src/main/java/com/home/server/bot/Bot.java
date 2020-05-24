@@ -2,6 +2,7 @@ package com.home.server.bot;
 
 import com.home.server.db.HerokuPostgresql;
 import com.home.server.dto.MembersData;
+import com.home.server.dto.OneMember;
 import com.home.server.model.ListResult;
 import com.home.server.model.MyIp;
 import com.home.server.model.developer.CocToken;
@@ -75,12 +76,12 @@ public class Bot extends TelegramLongPollingBot {
             DefaultBotOptions botOptions = ApiContext.getInstance(DefaultBotOptions.class);
 
             // Устанавливаем настройки прокси
-//            if (PROXY_IP != null && PROXY_PORT != null) {
-//                botOptions.setProxyHost(PROXY_IP);
-//                botOptions.setProxyPort(Integer.parseInt(PROXY_PORT));
-//            }
-//            // Выбираем тип прокси: [HTTP|SOCKS4|SOCKS5] (по умолчанию: NO_PROXY)
-//            botOptions.setProxyType(DefaultBotOptions.ProxyType.SOCKS5);
+            if (PROXY_IP != null && PROXY_PORT != null) {
+                botOptions.setProxyHost(PROXY_IP);
+                botOptions.setProxyPort(Integer.parseInt(PROXY_PORT));
+            }
+            // Выбираем тип прокси: [HTTP|SOCKS4|SOCKS5] (по умолчанию: NO_PROXY)
+            botOptions.setProxyType(DefaultBotOptions.ProxyType.SOCKS5);
 
             telegramBotsApi.registerBot(new Bot(botOptions));
         } catch (TelegramApiException e) {
@@ -96,7 +97,7 @@ public class Bot extends TelegramLongPollingBot {
     private void sendMsg(Message message, String text) {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(false);
-        sendMessage.enableHtml(true);
+        sendMessage.enableHtml(false);
         sendMessage.setChatId(message.getChatId().toString());
         sendMessage.setReplyToMessageId(message.getMessageId());
         sendMessage.setText(text);
@@ -167,7 +168,7 @@ public class Bot extends TelegramLongPollingBot {
                     sendMsg(message, result);
                     break;
                 case "/artem":
-                    String playerTagArt = "8VP9RGVVQ";
+                    String playerTagArt = "2LGQP90U8";
                     String resultArt = checkPlayer(cocToken, playerTagArt);
                     sendMsg(message, resultArt);
                     break;
@@ -196,10 +197,13 @@ public class Bot extends TelegramLongPollingBot {
                     }
                     break;
                 case "/wtf":
-                    MembersData membersData = new MembersData();
-                    membersData = herokuSql.checkClanMembers("YLRRJ9PJ");
-                    // todo перебрать результат для отправки
-                    sendMsg(message, String.format("Size membersData : %d", membersData.getOneMemberList().size()));
+                    sendMsg(message, "Please wait, I check members...");
+                    MembersData membersData = herokuSql.checkClanMembers("YLRRJ9PJ");
+                    sendMsg(message, String.format("Found changes for %d member(s)", membersData.getOneMemberList().size()));
+                    for (OneMember item : membersData.getOneMemberList()) {
+                        log.debug("\n\t==== START SEND to" + item.getName() + " === with result :" + item.getResult() + "\n");
+                        sendMsg(message, item.getResult());
+                    }
                     break;
                 default:
             }

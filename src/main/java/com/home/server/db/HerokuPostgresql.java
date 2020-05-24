@@ -158,14 +158,7 @@ public class HerokuPostgresql {
 
     public String checkPlayerInDb(Players players) {
         String playerName = players.getName();
-
-//        try {
-//            playerName = URLEncoder.encode(playerName, "UTF-8");
-//        } catch (UnsupportedEncodingException e) {
-//            log.error("Encode URL text " + e.getMessage());
-//        }
-
-        String result = String.format("%s\n\n", playerName);
+        String result = "";
         boolean state = false;
         Connection connection = null;
 
@@ -198,6 +191,7 @@ public class HerokuPostgresql {
             }
 
             if (state) {
+
                 log.debug(String.format("Игрок %s(%s) уже есть в БД, начинаем проверять его изменения...", players.getName(), players.getTag()));
                 int trophiesDiff = players.getTrophies() - playerData.getTrophies();
                 int vsTrophiesDiff = players.getVersusTrophies() - playerData.getVs_trophies();
@@ -224,6 +218,11 @@ public class HerokuPostgresql {
                 // Update table
                 statement.executeUpdate(String.format("UPDATE COC.PLR s SET trophies = %d, vs_trophies = %d, th = %d where s.tag = '%s'", players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel(), players.getTag().substring(1)));
 //                statement.execute("commit");
+
+                if (!result.equals("")) {
+                    result += String.format("\n\n%s\n", playerName);
+                    result += String.format("\uD83C\uDFC6(HV:%d | BB:%d)", players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel());
+                }
             }
 
             if (!state) {
@@ -248,11 +247,12 @@ public class HerokuPostgresql {
             }
         }
         // TODO пустое сообщение падает в ошибку, надо доабвить проверку перед отправкой, чтобы не пытаться отправить пустоту.
-        if (result.length() > 10) {
-            //MsgInfo msgInfo = telegramApi.SndMsg("392060526", result);
-            MsgInfo msgInfo = telegramApi.sndMsgPost("392060526", result);
-        }
-        return result + String.format("\uD83C\uDFC6(HV:%d|BB:%d)", players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel());
+//        if (result.length() > 10) {
+//            //MsgInfo msgInfo = telegramApi.SndMsg("392060526", result);
+//            MsgInfo msgInfo = telegramApi.sndMsgPost("392060526", result);
+//        }
+
+        return result;
     }
 
     public MembersData checkClanMembers(String clanTag) {
@@ -276,7 +276,9 @@ public class HerokuPostgresql {
                 String playerInfo = checkPlayerInDb(players);
 
                 log.debug("\n\t = = = = = = = = = Get data about player : " + players.getName());
-                oneMemberList.add(new OneMember(players.getName(), playerInfo));
+                if(!playerInfo.equals(""))
+                    oneMemberList.add(new OneMember(players.getName(), playerInfo));
+
                 log.debug("Player name : " + players.getName());
                 log.debug("Player info : " + playerInfo);
             }
