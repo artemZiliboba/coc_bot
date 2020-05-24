@@ -24,7 +24,7 @@ public class CronTrigger {
                 .withIdentity("checkPlayer", "group1")
                 .withSchedule(
                         //CronScheduleBuilder.cronSchedule("* 0/1 * * * ?"))
-                        CronScheduleBuilder.cronSchedule("0 * * ? * *"))
+                        CronScheduleBuilder.cronSchedule("0 0 * ? * *")) // every hour
                 .build();
 
         // Start
