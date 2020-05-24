@@ -46,7 +46,7 @@ public class TelegramApi extends BaseService implements ITelegramApi {
         log.debug(String.format("Send message to chatId %s", chatId));
 
         String url = String.format(HOST + SEND_MESSAGE_POST, BOT_TOKEN);
-        String body = String.format("{\"chat_id\": \"%s\",\"text\": \"%s\"}", chatId, text);
+        String body = String.format("{\"chat_id\": \"%s\", \"text\": \"%s\"}", chatId, text);
         HttpHeaders httpHeaders = new HttpHeaders();
         return request(url, HttpMethod.POST, httpHeaders, body, MsgInfo.class);
     }
