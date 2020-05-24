@@ -95,7 +95,7 @@ public class Bot extends TelegramLongPollingBot {
         sendMessage.enableMarkdown(false);
         sendMessage.enableHtml(false);
         sendMessage.setChatId(message.getChatId().toString());
-        if(replyText)
+        if (replyText)
             sendMessage.setReplyToMessageId(message.getMessageId());
         sendMessage.setText(text);
 
@@ -164,23 +164,28 @@ public class Bot extends TelegramLongPollingBot {
                     String result = checkPlayer(cocToken, playerTag);
                     sendMsg(message, result, true);
                     break;
+                case "/groma":
+                    String playerGroma = "LCCCGJQYL";
+                    String resultGroma = checkPlayer(cocToken, playerGroma);
+                    sendMsg(message, resultGroma, true);
+                    break;
                 case "/artem":
-                    String playerTagArt = "2LGQP90U8";
+                    String playerTagArt = "28VQVLVJ0";
                     String resultArt = checkPlayer(cocToken, playerTagArt);
                     sendMsg(message, resultArt, true);
                     break;
-                case "/trigger":
-                    CronTrigger cronTrigger = new CronTrigger();
-                    try {
-                        log.debug("I in trigger");
-                        cronTrigger.startScheduler();
-                        sendMsg(message, "Scheduler started.", true);
-                    } catch (Exception e) {
-                        log.debug("Failed start scheduler : " + e.getMessage());
-                        e.printStackTrace();
-                        sendMsg(message, e.getMessage(), true);
-                    }
-                    break;
+//                case "/trigger":
+//                    CronTrigger cronTrigger = new CronTrigger();
+//                    try {
+//                        log.debug("I in trigger");
+//                        cronTrigger.startScheduler();
+//                        sendMsg(message, "Scheduler started.", true);
+//                    } catch (Exception e) {
+//                        log.debug("Failed start scheduler : " + e.getMessage());
+//                        e.printStackTrace();
+//                        sendMsg(message, e.getMessage(), true);
+//                    }
+//                    break;
                 case "Hello":
                     try {
                         execute(sendInlineKeyBoardMessage(update.getMessage().getChatId()));
@@ -191,7 +196,7 @@ public class Bot extends TelegramLongPollingBot {
                 case "/wtf":
                     sendMsg(message, "Please wait, I'm checking members...", true);
                     MembersData membersData = herokuSql.checkClanMembers("YLRRJ9PJ");
-                    if(Objects.nonNull(membersData) && membersData.getOneMemberList().size() > 1)
+                    if (Objects.nonNull(membersData) && membersData.getOneMemberList().size() > 1)
                         sendMsg(message, String.format("Found changes for %d member(s)", membersData.getOneMemberList().size()), false);
                     else
                         sendMsg(message, "Without changes...\uD83E\uDD37\u200D♂", true);
