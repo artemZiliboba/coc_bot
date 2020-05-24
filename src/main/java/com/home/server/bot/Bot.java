@@ -174,18 +174,18 @@ public class Bot extends TelegramLongPollingBot {
                     String resultArt = checkPlayer(cocToken, playerTagArt);
                     sendMsg(message, resultArt, true);
                     break;
-//                case "/trigger":
-//                    CronTrigger cronTrigger = new CronTrigger();
-//                    try {
-//                        log.debug("I in trigger");
-//                        cronTrigger.startScheduler();
-//                        sendMsg(message, "Scheduler started.", true);
-//                    } catch (Exception e) {
-//                        log.debug("Failed start scheduler : " + e.getMessage());
-//                        e.printStackTrace();
-//                        sendMsg(message, e.getMessage(), true);
-//                    }
-//                    break;
+                case "/trigger":
+                    CronTrigger cronTrigger = new CronTrigger();
+                    try {
+                        log.debug("I in trigger");
+                        cronTrigger.startScheduler();
+                        sendMsg(message, "Scheduler started.", true);
+                    } catch (Exception e) {
+                        log.debug("Failed start scheduler : " + e.getMessage());
+                        e.printStackTrace();
+                        sendMsg(message, e.getMessage(), true);
+                    }
+                    break;
                 case "Hello":
                     try {
                         execute(sendInlineKeyBoardMessage(update.getMessage().getChatId()));

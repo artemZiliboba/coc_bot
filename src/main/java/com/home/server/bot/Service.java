@@ -20,6 +20,7 @@ import java.util.Objects;
 @Slf4j
 public class Service extends TelegramLongPollingBot implements Job {
     private HerokuPostgresql herokuSql = new HerokuPostgresql();
+    private static final String BOT_TOKEN = System.getenv("BOT_TOKEN");
 
     public void execute(JobExecutionContext context) throws JobExecutionException {
         sendMsg("Please wait, I'm checking members...");
@@ -43,7 +44,7 @@ public class Service extends TelegramLongPollingBot implements Job {
 
     @Override
     public String getBotToken() {
-        return null;
+        return BOT_TOKEN;
     }
 
     @Override
