@@ -159,11 +159,11 @@ public class HerokuPostgresql {
     public String checkPlayerInDb(Players players) {
         String playerName = players.getName();
 
-        try {
-            playerName = URLEncoder.encode(playerName, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            log.error("Encode URL text " + e.getMessage());
-        }
+//        try {
+//            playerName = URLEncoder.encode(playerName, "UTF-8");
+//        } catch (UnsupportedEncodingException e) {
+//            log.error("Encode URL text " + e.getMessage());
+//        }
 
         String result = String.format("%s\n\n", playerName);
         boolean state = false;
@@ -249,7 +249,8 @@ public class HerokuPostgresql {
         }
         // TODO пустое сообщение падает в ошибку, надо доабвить проверку перед отправкой, чтобы не пытаться отправить пустоту.
         if (result.length() > 10) {
-            MsgInfo msgInfo = telegramApi.SndMsg("392060526", result);
+            //MsgInfo msgInfo = telegramApi.SndMsg("392060526", result);
+            MsgInfo msgInfo = telegramApi.sndMsgPost("392060526", result);
         }
         return result + String.format("\uD83C\uDFC6(HV:%d|BB:%d)", players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel());
     }

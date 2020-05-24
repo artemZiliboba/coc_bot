@@ -17,6 +17,7 @@ public class TelegramApi extends BaseService implements ITelegramApi {
     private static final String BOT_TOKEN = System.getenv("BOT_TOKEN");
     private static final String URL_ME = "/getMe";
     private static final String SEND_MESSAGE = "/sendMessage?chat_id=%s&text=%s";
+    private static final String SEND_MESSAGE_POST = "/sendMessage";
 
     public TelegramApi(RestOperations restTemplate, String host) {
         super(restTemplate, host);
@@ -38,6 +39,16 @@ public class TelegramApi extends BaseService implements ITelegramApi {
         String url = String.format(HOST + SEND_MESSAGE, BOT_TOKEN, chatId, text);
         HttpHeaders httpHeaders = new HttpHeaders();
         return request(url, HttpMethod.GET, httpHeaders, MsgInfo.class);
+    }
+
+    @Override
+    public MsgInfo sndMsgPost(String chatId, String text) {
+        log.debug(String.format("Send message to chatId %s", chatId));
+
+        String url = String.format(HOST + SEND_MESSAGE_POST, BOT_TOKEN);
+        String body = String.format("{\"chat_id\": \"%s\",\"text\": \"%s\"}", chatId, text);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        return request(url, HttpMethod.POST, httpHeaders, body, MsgInfo.class);
     }
 
     private String prepareUrl(String host, String url) {

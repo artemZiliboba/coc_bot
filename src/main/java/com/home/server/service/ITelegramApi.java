@@ -7,4 +7,6 @@ public interface ITelegramApi {
     Me getMe();
 
     MsgInfo SndMsg(String chatId, String text);
+
+    MsgInfo sndMsgPost(String chatId, String text);
 }
