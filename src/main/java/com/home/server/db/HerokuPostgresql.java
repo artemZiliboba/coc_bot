@@ -156,8 +156,8 @@ public class HerokuPostgresql {
         //log.debug("COC token is : " + coc_token);
     }
 
-    public String checkPlayerInDb(Players players) {
-        String playerName = players.getName();
+    public String checkPlayerInDb(Players players, Boolean onlyChanges) {
+        String playerName = players.getName() + "\n\n";
         String result = "";
         boolean state = false;
         Connection connection = null;
@@ -199,16 +199,16 @@ public class HerokuPostgresql {
 
                 // Кубки в родной деревне
                 if (trophiesDiff > 0) {
-                    result += String.format("Up HV trophies: %d ↑\n", trophiesDiff);
+                    result += String.format("Home village +%d trophies.\n", trophiesDiff);
                 } else if (trophiesDiff < 0) {
-                    result += String.format("Down HV trophies: %d ↓\n", trophiesDiff);
+                    result += String.format("Home village %d trophies.\n", trophiesDiff);
                 }
 
                 // Кубки в в деревне строителя
                 if (vsTrophiesDiff > 0) {
-                    result += String.format("Up BB trophies: %d ↑\n", vsTrophiesDiff);
+                    result += String.format("Builder base +%d trophies\n", vsTrophiesDiff);
                 } else if ((vsTrophiesDiff < 0)) {
-                    result += String.format("Down BB trophies: %d ↓\n", vsTrophiesDiff);
+                    result += String.format("Builder base %d trophies\n", vsTrophiesDiff);
                 }
 
                 if (thDiff > 0) {
@@ -220,8 +220,10 @@ public class HerokuPostgresql {
 //                statement.execute("commit");
 
                 if (!result.equals("")) {
-                    result += String.format("\n\n%s\n", playerName);
-                    result += String.format("\uD83C\uDFC6(HV:%d | BB:%d)", players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel());
+                    //result += String.format("\n\n%s\n", playerName);
+                    result += String.format("\n\uD83C\uDFC6(HV:%d | BB:%d)", players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel());
+                    playerName += result;
+                    result = playerName;
                 }
             }
 
@@ -246,12 +248,9 @@ public class HerokuPostgresql {
                 log.error(e.getMessage());
             }
         }
-        // TODO пустое сообщение падает в ошибку, надо доабвить проверку перед отправкой, чтобы не пытаться отправить пустоту.
-//        if (result.length() > 10) {
-//            //MsgInfo msgInfo = telegramApi.SndMsg("392060526", result);
-//            MsgInfo msgInfo = telegramApi.sndMsgPost("392060526", result);
-//        }
-
+        if (!onlyChanges && result.equals("")) {
+            result += String.format("%s\n\n\uD83C\uDFC6(HV:%d | BB:%d)", players.getName(), players.getTrophies(), players.getVersusTrophies());
+        }
         return result;
     }
 
@@ -273,10 +272,10 @@ public class HerokuPostgresql {
                 log.debug("Read data from query...");
                 CocToken cocToken = authService.getCocToken(COC_EMAIL, COC_PASS);
                 Players players = cocService.getPlayers(cocToken, rs.getString("tag"));
-                String playerInfo = checkPlayerInDb(players);
+                String playerInfo = checkPlayerInDb(players, true);
 
                 log.debug("\n\t = = = = = = = = = Get data about player : " + players.getName());
-                if(!playerInfo.equals(""))
+                if (!playerInfo.equals(""))
                     oneMemberList.add(new OneMember(players.getName(), playerInfo));
 
                 log.debug("Player name : " + players.getName());

@@ -1,5 +1,6 @@
 package com.home.server.scheduler;
 
+import com.home.server.bot.Service;
 import org.quartz.*;
 import org.quartz.impl.StdSchedulerFactory;
 
@@ -7,8 +8,13 @@ public class CronTrigger {
 
     public void startScheduler() throws Exception {
         // Job
+//        JobDetail job = JobBuilder
+//                .newJob(CheckPlayerCron.class)
+//                .withIdentity("checkPlayer", "group1")
+//                .build();
+
         JobDetail job = JobBuilder
-                .newJob(CheckPlayerCron.class)
+                .newJob(Service.class)
                 .withIdentity("checkPlayer", "group1")
                 .build();
 

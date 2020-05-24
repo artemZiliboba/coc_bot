@@ -18,7 +18,7 @@ public class DbTest {
         players.setVersusTrophies(4275);
         players.setTownHallLevel(11);
 
-        String result = herokuSql.checkPlayerInDb(players);
+        String result = herokuSql.checkPlayerInDb(players, false);
         log.debug("Result : " + result);
     }
 }
