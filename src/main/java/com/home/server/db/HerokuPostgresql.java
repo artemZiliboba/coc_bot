@@ -157,7 +157,7 @@ public class HerokuPostgresql {
     }
 
     public String checkPlayerInDb(Players players, Boolean onlyChanges) {
-        String playerName = "\uD83C\uDFAE" + players.getName() + "\n----------\n\n";
+        String playerName = "\uD83C\uDFAE" + players.getName() + "\n--------------------\n";
         String result = "";
         boolean state = false;
         Connection connection = null;
@@ -221,7 +221,7 @@ public class HerokuPostgresql {
 
                 if (!result.equals("")) {
                     //result += String.format("\n\n%s\n", playerName);
-                    result += String.format("\n----------");
+                    result += String.format("--------------------");
                     result += String.format("\n\uD83C\uDFC6(HV:%d | BB:%d)", players.getTrophies(), players.getVersusTrophies(), players.getTownHallLevel());
                     playerName += result;
                     result = playerName;
