@@ -59,6 +59,15 @@ public class Bot extends TelegramLongPollingBot {
         ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
 
+        CronTrigger cronTrigger = new CronTrigger();
+        try {
+            cronTrigger.startScheduler();
+            log.debug("Scheduler started...");
+        } catch (Exception e) {
+            log.debug("Failed start scheduler : " + e.getMessage());
+            e.printStackTrace();
+        }
+
         try {
             // Авторизация бота в прокси, после создания будет использоваться автоматически
             Authenticator.setDefault(new Authenticator() {
@@ -177,7 +186,6 @@ public class Bot extends TelegramLongPollingBot {
                 case "/trigger":
                     CronTrigger cronTrigger = new CronTrigger();
                     try {
-                        log.debug("I in trigger");
                         cronTrigger.startScheduler();
                         sendMsg(message, "Scheduler started.", true);
                     } catch (Exception e) {
