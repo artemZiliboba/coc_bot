@@ -59,14 +59,14 @@ public class Bot extends TelegramLongPollingBot {
         ApiContextInitializer.init();
         TelegramBotsApi telegramBotsApi = new TelegramBotsApi();
 
-        CronTrigger cronTrigger = new CronTrigger();
-        try {
-            cronTrigger.startScheduler();
-            log.debug("Scheduler started...");
-        } catch (Exception e) {
-            log.debug("Failed start scheduler : " + e.getMessage());
-            e.printStackTrace();
-        }
+//        CronTrigger cronTrigger = new CronTrigger();
+//        try {
+//            cronTrigger.startScheduler();
+//            log.debug("Scheduler started...");
+//        } catch (Exception e) {
+//            log.debug("Failed start scheduler : " + e.getMessage());
+//            e.printStackTrace();
+//        }
 
         try {
             // Авторизация бота в прокси, после создания будет использоваться автоматически
