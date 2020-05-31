@@ -135,6 +135,8 @@ public class Bot extends TelegramLongPollingBot {
 
         Message message = update.getMessage();
         if (message != null && message.hasText()) {
+            herokuSql.logInsert(message.getChatId().toString(), message.getText());
+
             switch (message.getText()) {
                 case "/help":
                     BotLogger.info(LOGTAG, "Hello my friend");

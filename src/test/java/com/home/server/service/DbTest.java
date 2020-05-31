@@ -21,4 +21,9 @@ public class DbTest {
         String result = herokuSql.checkPlayerInDb(players, false);
         log.debug("Result : " + result);
     }
+
+    @Test
+    public void insertLog(){
+        herokuSql.logInsert("789123", "Ololo");
+    }
 }

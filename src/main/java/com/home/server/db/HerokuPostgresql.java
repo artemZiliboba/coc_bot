@@ -5,7 +5,6 @@ import com.home.server.dto.OneMember;
 import com.home.server.dto.PlayerData;
 import com.home.server.model.developer.CocToken;
 import com.home.server.model.players.Players;
-import com.home.server.model.telegram.MsgInfo;
 import com.home.server.service.AuthService;
 import com.home.server.service.CocService;
 import com.home.server.service.TelegramApi;
@@ -14,8 +13,6 @@ import org.springframework.web.client.RestOperations;
 import org.springframework.web.client.RestTemplate;
 import org.telegram.telegrambots.meta.logging.BotLogger;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -299,5 +296,49 @@ public class HerokuPostgresql {
         }
         result.setOneMemberList(oneMemberList);
         return result;
+    }
+
+    public void logInsert(String chatId, String message) {
+        try {
+            Class.forName("org.postgresql.Driver");
+        } catch (ClassNotFoundException e) {
+            BotLogger.error(LOGTAG, "PostgreSQL JDBC Driver is not found. Include it in your library path ");
+            e.printStackTrace();
+        }
+
+        log.debug("PostgreSQL JDBC Driver successfully connected");
+        Connection connection = null;
+
+        try {
+            connection = DriverManager
+                    .getConnection(DB_URL, USER, PASS);
+
+            Statement statement = connection.createStatement();
+
+            log.debug("Set query timeout = " + QUERY_TIMEOUT);
+            statement.setQueryTimeout(QUERY_TIMEOUT);  // set timeout to 30 sec.
+
+            log.debug("Insert into LOG_MESSAGE...");
+
+            statement.executeUpdate("insert into COC.LOG_MESSAGE(chat_id, message) values('" + chatId + "', '" + message + "')");
+
+        } catch (SQLException e) {
+            log.debug("Connection Failed");
+            BotLogger.error(LOGTAG, "PostgreSQL JDBC Driver is not found. Include it in your library path ");
+            e.printStackTrace();
+        } finally {
+            try {
+                if (connection != null) {
+                    connection.close();
+                    log.debug("connection closed ...");
+                }
+
+            } catch (SQLException e) {
+                // connection close failed.
+                log.error(String.format("SQL exception : %s", e.getMessage()));
+            }
+        }
+
+
     }
 }
