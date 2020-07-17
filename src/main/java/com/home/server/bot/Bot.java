@@ -205,7 +205,7 @@ public class Bot extends TelegramLongPollingBot {
                     break;
                 case "/wtf":
                     sendMsg(message, "Please wait, I'm checking members...", true);
-                    MembersData membersData = herokuSql.checkClanMembers("YLRRJ9PJ");
+                    MembersData membersData = herokuSql.checkClanMembers(System.getenv("CLAN_TAG"));
                     if (Objects.nonNull(membersData) && membersData.getOneMemberList().size() > 1)
                         sendMsg(message, String.format("Found changes for %d member(s)", membersData.getOneMemberList().size()), false);
                     else
