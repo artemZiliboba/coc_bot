@@ -51,7 +51,7 @@ public class Service extends TelegramLongPollingBot implements Job {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(false);
         sendMessage.enableHtml(false);
-        sendMessage.setChatId("-491568483");
+        sendMessage.setChatId("-1001313833668");
         sendMessage.setText(text);
 
         try {
