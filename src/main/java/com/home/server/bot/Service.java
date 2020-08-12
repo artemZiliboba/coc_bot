@@ -3,15 +3,12 @@ package com.home.server.bot;
 import com.home.server.db.HerokuPostgresql;
 import com.home.server.dto.MembersData;
 import com.home.server.dto.OneMember;
-import com.home.server.model.MyIp;
-import com.home.server.model.telegram.MsgInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -26,7 +23,7 @@ public class Service extends TelegramLongPollingBot implements Job {
         sendMsg("Please wait, I'm checking members...");
 
         MembersData membersData = herokuSql.checkClanMembers("YLRRJ9PJ");
-        if(Objects.nonNull(membersData) && membersData.getOneMemberList().size() > 1)
+        if(Objects.nonNull(membersData) && membersData.getOneMemberList().size() > 0)
             sendMsg(String.format("Found changes for %d member(s)", membersData.getOneMemberList().size()));
         else
             sendMsg("Without changes...\uD83E\uDD37\u200D♂");
@@ -54,7 +51,7 @@ public class Service extends TelegramLongPollingBot implements Job {
         SendMessage sendMessage = new SendMessage();
         sendMessage.enableMarkdown(false);
         sendMessage.enableHtml(false);
-        sendMessage.setChatId("392060526");
+        sendMessage.setChatId("-491568483");
         sendMessage.setText(text);
 
         try {

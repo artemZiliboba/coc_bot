@@ -211,7 +211,7 @@ public class Bot extends TelegramLongPollingBot {
                     else
                         sendMsg(message, "Without changes...\uD83E\uDD37\u200D♂", true);
                     for (OneMember item : membersData.getOneMemberList()) {
-                        log.debug("\n\t==== START SEND to" + item.getName() + " === with result :" + item.getResult() + "\n");
+                        log.debug("\n\t==== START SEND to " + item.getName() + " === with result :" + item.getResult() + "\n");
                         sendMsg(message, item.getResult(), false);
                     }
                     break;
