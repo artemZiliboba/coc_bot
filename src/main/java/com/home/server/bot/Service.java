@@ -20,7 +20,7 @@ public class Service extends TelegramLongPollingBot implements Job {
     private static final String BOT_TOKEN = System.getenv("BOT_TOKEN");
 
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        sendMsg("Please wait, I'm checking members...");
+        sendMsg("Please wait, I'm checking members..");
 
         MembersData membersData = herokuSql.checkClanMembers("YLRRJ9PJ");
         if(Objects.nonNull(membersData) && membersData.getOneMemberList().size() > 0)
