@@ -11,7 +11,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <junit.version>4.12</junit.version>
+        <junit.version>4.13.1</junit.version>
         <engine.version>001.01-SNAPSHOT</engine.version>
         <jackson.version>2.11.0</jackson.version>
 
